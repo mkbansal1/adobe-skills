@@ -14,12 +14,12 @@
     },
     {
       "name": "aem-cloud-service-dispatcher",
-      "source": "./skills/aem/cloud-service",
+      "source": "./skills/aem/cloud-service/skills/dispatcher",
       "description": "Mode-specific Dispatcher skills for AEM as a Cloud Service workflows"
     },
     {
       "name": "aem-6-5-lts-dispatcher",
-      "source": "./skills/aem/6.5-lts",
+      "source": "./skills/aem/6.5-lts/skills/dispatcher",
       "description": "Mode-specific Dispatcher skills for AEM 6.5 LTS and AMS workflows"
     }
   ]

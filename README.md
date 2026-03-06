@@ -27,24 +27,24 @@ Repository of Adobe skills for AI coding agents.
 npx skills add https://github.com/adobe/skills/tree/main/skills/aem/edge-delivery-services --all
 
 # Install all AEM Cloud Dispatcher skills
-npx skills add https://github.com/adobe/skills/tree/main/skills/aem/cloud-service --all
+npx skills add https://github.com/adobe/skills/tree/main/skills/aem/cloud-service/skills/dispatcher --all
 
 # Install all AEM 6.5 LTS Dispatcher skills
-npx skills add https://github.com/adobe/skills/tree/main/skills/aem/6.5-lts --all
+npx skills add https://github.com/adobe/skills/tree/main/skills/aem/6.5-lts/skills/dispatcher --all
 
 # Install dispatcher skills for a single agent (pick ONE mode only)
 # Cloud-service mode:
-npx skills add https://github.com/adobe/skills/tree/main/skills/aem/cloud-service --all -a cursor -y
+npx skills add https://github.com/adobe/skills/tree/main/skills/aem/cloud-service/skills/dispatcher --all -a cursor -y
 # AMS 6.5 mode:
-npx skills add https://github.com/adobe/skills/tree/main/skills/aem/6.5-lts --all -a cursor -y
+npx skills add https://github.com/adobe/skills/tree/main/skills/aem/6.5-lts/skills/dispatcher --all -a cursor -y
 
 # Install specific skill(s)
 npx skills add adobe/skills -s content-driven-development
 npx skills add adobe/skills -s content-driven-development building-blocks testing-blocks
 
 # Install a specific dispatcher skill from a mode-scoped source
-npx skills add https://github.com/adobe/skills/tree/main/skills/aem/cloud-service -s config-authoring
-npx skills add https://github.com/adobe/skills/tree/main/skills/aem/6.5-lts -s config-authoring
+npx skills add https://github.com/adobe/skills/tree/main/skills/aem/cloud-service/skills/dispatcher -s config-authoring
+npx skills add https://github.com/adobe/skills/tree/main/skills/aem/6.5-lts/skills/dispatcher -s config-authoring
 
 # Install all skills discoverable at repository root (currently AEM Edge Delivery Services)
 npx skills add adobe/skills --all
@@ -53,8 +53,8 @@ npx skills add adobe/skills --all
 # List skills discoverable at repository root (currently AEM Edge Delivery Services)
 npx skills add adobe/skills --list
 # For dispatcher skills, use mode-scoped --list:
-# npx skills add https://github.com/adobe/skills/tree/main/skills/aem/cloud-service --list
-# npx skills add https://github.com/adobe/skills/tree/main/skills/aem/6.5-lts --list
+# npx skills add https://github.com/adobe/skills/tree/main/skills/aem/cloud-service/skills/dispatcher --list
+# npx skills add https://github.com/adobe/skills/tree/main/skills/aem/6.5-lts/skills/dispatcher --list
 ```
 
 ### upskill (GitHub CLI Extension)
@@ -70,20 +70,20 @@ gh upskill adobe/skills --all
 gh upskill adobe/skills --path skills/aem/edge-delivery-services --all
 
 # Install only AEM Cloud Dispatcher skills
-gh upskill adobe/skills --path skills/aem/cloud-service --all
+gh upskill adobe/skills --path skills/aem/cloud-service/skills/dispatcher --all
 
 # Install only AEM 6.5 LTS Dispatcher skills
-gh upskill adobe/skills --path skills/aem/6.5-lts --all
+gh upskill adobe/skills --path skills/aem/6.5-lts/skills/dispatcher --all
 
 # Install a specific skill
 gh upskill adobe/skills --path skills/aem/edge-delivery-services --skill content-driven-development
-gh upskill adobe/skills --path skills/aem/cloud-service --skill config-authoring
-gh upskill adobe/skills --path skills/aem/6.5-lts --skill config-authoring
+gh upskill adobe/skills --path skills/aem/cloud-service/skills/dispatcher --skill config-authoring
+gh upskill adobe/skills --path skills/aem/6.5-lts/skills/dispatcher --skill config-authoring
 
 # List available skills in a subfolder
 gh upskill adobe/skills --path skills/aem/edge-delivery-services --list
-gh upskill adobe/skills --path skills/aem/cloud-service --list
-gh upskill adobe/skills --path skills/aem/6.5-lts --list
+gh upskill adobe/skills --path skills/aem/cloud-service/skills/dispatcher --list
+gh upskill adobe/skills --path skills/aem/6.5-lts/skills/dispatcher --list
 ```
 
 ## Available Skills
@@ -122,10 +122,10 @@ skills/
     |       |-- building-blocks/
     |       \-- ...
     |-- cloud-service/
-    |   |-- .claude-plugin/
-    |   |   \-- plugin.json
     |   \-- skills/
     |       \-- dispatcher/
+    |           |-- .claude-plugin/
+    |           |   \-- plugin.json
     |           |-- config-authoring/
     |           |   |-- SKILL.md
     |           |   \-- references/
@@ -133,10 +133,10 @@ skills/
     |           |-- technical-advisory/
     |           \-- ...
     |-- 6.5-lts/
-    |   |-- .claude-plugin/
-    |   |   \-- plugin.json
     |   \-- skills/
     |       \-- dispatcher/
+    |           |-- .claude-plugin/
+    |           |   \-- plugin.json
     |           |-- config-authoring/
     |           |   |-- SKILL.md
     |           |   \-- references/
