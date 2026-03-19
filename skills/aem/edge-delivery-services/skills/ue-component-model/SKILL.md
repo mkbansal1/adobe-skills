@@ -65,12 +65,16 @@ Map the block's content expectations to component model fields. Read `references
 | An image | `reference` (name: `image`) | Pair with `text` field named `imageAlt` |
 | A URL/link | `aem-content` (name: `link` or `url`) | For page links and external URLs |
 | Rich text content | `richtext` | For formatted text with headings, lists, links |
-| Plain text | `text` | For titles, labels, short strings |
+| Plain text (single line) | `text` | For titles, labels, short strings |
+| Plain text (multi-line) | `textarea` | For descriptions, notes, long text without formatting |
 | Heading level choice | `select` with h1-h6 options | Name it `titleType` to auto-collapse with title |
 | Style variants | `multiselect` (name: `classes`) | Values become CSS classes on block div |
+| Multiple toggles | `checkbox-group` | For multiple independent boolean options |
 | Boolean toggle | `boolean` | For show/hide options |
 | Number value | `number` | For counts, limits |
 | Content Fragment | `aem-content-fragment` | For CF-driven blocks |
+| Experience Fragment | `aem-experience-fragment` | For reusable content+layout fragments |
+| Content tags | `aem-tag` | For categorization via AEM tag picker |
 
 **Field naming rules (semantic collapsing):**
 - `image` + `imageAlt` → collapsed into `<picture><img alt="...">`
@@ -159,15 +163,15 @@ After generating the config, verify:
 
 For detailed information, read these reference files as needed:
 
-- **`references/architecture.md`** — How the three files connect, the full AEM→Markdown→HTML pipeline, resource types, field naming conventions, and semantic collapsing rules
-- **`references/field-types.md`** — Complete reference for all field component types (`text`, `richtext`, `reference`, `aem-content`, `select`, `multiselect`, `boolean`, `number`, `container`, `tab`, etc.), value types, field properties, conditional fields, and option formats
-- **`references/examples.md`** — Real examples from the codebase showing Hero (simple), Embed (simple with URL), Cards (container), Teaser (variants), Product Details (key-value), Article (content fragment), and Section configuration
+- **`references/architecture.md`** — How the three files connect, the full AEM→Markdown→HTML pipeline, resource types, field naming conventions, semantic collapsing rules, and RTE filter configuration
+- **`references/field-types.md`** — Complete reference for all 17 field component types (`text`, `textarea`, `richtext`, `reference`, `aem-content`, `aem-content-fragment`, `aem-experience-fragment`, `aem-tag`, `select`, `multiselect`, `checkbox-group`, `radio-group`, `boolean`, `number`, `date-time`, `container`, `tab`), valueType constraints, required properties, field properties, validation types, conditional fields, and option formats
+- **`references/examples.md`** — Real examples showing Hero (simple), Embed (simple with URL), Cards (container), Teaser (variants), Product Details (key-value), Article (content fragment), Section configuration, Metadata (textarea), Feature Toggles (checkbox-group), and RTE filter configuration
 
 ## Common Pitfalls
 
 - **Forgetting to add to section filter**: The block won't appear in the author's add menu unless it's in the `section` filter's components list.
 - **Wrong resourceType**: Almost all custom blocks use `core/franklin/components/block/v1/block`. Don't invent custom resource types.
 - **Mismatched model/filter IDs**: The `template.model` must exactly match the model `id`, and `template.filter` must exactly match the filter `id`.
-- **Using `text-input` where `aem-content` is needed**: For URLs and page links, use `aem-content` so authors get the content picker. Use `text-input` only for plain text values.
-- **Missing `valueType`**: While optional, always include `valueType` for clarity. Default is `string`.
+- **Choosing the wrong text field type**: Use `text` for single-line strings, `textarea` for multi-line plain text, and `richtext` for formatted content. For URLs and page links, use `aem-content` so authors get the content picker.
+- **Wrong valueType**: Most components enforce a specific `valueType` (e.g., `boolean` must use `"boolean"`, `number` must use `"number"`, `checkbox-group` must use `"string[]"`). Always include `valueType` and check the field-types reference for the enforced value.
 - **Container without filter**: Container blocks need a `filter` (not a `model`) in their template, and a corresponding filter entry in component-filters.json.
