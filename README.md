@@ -15,6 +15,9 @@ Repository of Adobe skills for AI coding agents.
 
 # Install AEM Project Management plugin (6 skills)
 /plugin install aem-project-management@adobe-skills
+
+# Install App Builder plugin (6 skills)
+/plugin install app-builder@adobe-skills
 ```
 
 ### Vercel Skills (npx skills)
@@ -22,6 +25,9 @@ Repository of Adobe skills for AI coding agents.
 ```bash
 # Install all AEM Edge Delivery Services skills
 npx skills add https://github.com/adobe/skills/tree/main/skills/aem/edge-delivery-services --all
+
+# Install all App Builder skills
+npx skills add https://github.com/adobe/skills/tree/main/skills/app-builder --all
 
 # Install specific skill(s)
 npx skills add adobe/skills -s content-driven-development
@@ -118,33 +124,62 @@ cd your-edge-delivery-project   # or any subdirectory within it
 | `whitepaper` | Create professional PDF whitepapers from Markdown |
 | `auth` | Authenticate with AEM Config Service API |
 
+### App Builder
+
+Development, customization, testing, and deployment skills for Adobe App Builder projects.
+
+**Skill chaining:**
+- **Actions path:** `appbuilder-project-init` → `appbuilder-action-scaffolder` → `appbuilder-testing` → `appbuilder-cicd-pipeline`
+- **UI path:** `appbuilder-project-init` → `appbuilder-ui-scaffolder` → `appbuilder-testing` → `appbuilder-cicd-pipeline`
+- **E2E path:** `appbuilder-ui-scaffolder` or `appbuilder-testing` → `appbuilder-e2e-testing` → `appbuilder-cicd-pipeline`
+
+| Skill | Description |
+|-------|-------------|
+| `appbuilder-project-init` | Initialize new Adobe App Builder projects and choose the right bootstrap path |
+| `appbuilder-action-scaffolder` | Scaffold, implement, deploy, and debug Adobe Runtime actions |
+| `appbuilder-ui-scaffolder` | Generate React Spectrum UI components for ExC Shell SPAs and AEM UI Extensions |
+| `appbuilder-testing` | Generate and run Jest unit, integration, and contract tests for actions and UI components |
+| `appbuilder-e2e-testing` | Playwright browser E2E tests for ExC Shell SPAs and AEM extensions |
+| `appbuilder-cicd-pipeline` | Set up CI/CD pipelines for GitHub Actions, Azure DevOps, and GitLab CI |
+
 ## Repository Structure
 
 ```
 skills/
-└── aem/
-    ├── edge-delivery-services/
-    │   ├── .claude-plugin/
-    │   │   └── plugin.json
-    │   └── skills/
-    │       ├── content-driven-development/
-    │       ├── building-blocks/
-    │       └── ...
-    └── project-management/
-        ├── .claude-plugin/
-        │   └── plugin.json
-        ├── fonts/
-        ├── hooks/
-        │   └── pdf-lifecycle.js
-        ├── templates/
-        │   └── whitepaper.typ
-        └── skills/
-            ├── handover/
-            ├── authoring/
-            ├── development/
-            ├── admin/
-            ├── whitepaper/
-            └── auth/
+├── aem/
+│   ├── edge-delivery-services/
+│   │   ├── .claude-plugin/
+│   │   │   └── plugin.json
+│   │   └── skills/
+│   │       ├── content-driven-development/
+│   │       ├── building-blocks/
+│   │       └── ...
+│   └── project-management/
+│       ├── .claude-plugin/
+│       │   └── plugin.json
+│       ├── fonts/
+│       ├── hooks/
+│       │   └── pdf-lifecycle.js
+│       ├── templates/
+│       │   └── whitepaper.typ
+│       └── skills/
+│           ├── handover/
+│           ├── authoring/
+│           ├── development/
+│           ├── admin/
+│           ├── whitepaper/
+│           └── auth/
+└── app-builder/
+    ├── .claude-plugin/
+    │   └── plugin.json
+    └── skills/
+        ├── _shared/
+        ├── appbuilder-project-init/
+        ├── appbuilder-action-scaffolder/
+        ├── appbuilder-ui-scaffolder/
+        ├── appbuilder-testing/
+        ├── appbuilder-e2e-testing/
+        └── appbuilder-cicd-pipeline/
 ```
 
 ## Contributing
