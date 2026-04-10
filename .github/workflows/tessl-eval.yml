@@ -1,0 +1,147 @@
+name: Tessl Skill Eval
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  tessl-eval:
+    runs-on: ubuntu-latest
+    # Uses the "eval" environment for protection rules (e.g. reviewer approval)
+    # to guard the TESSL_TOKEN secret against exfiltration via same-repo branches.
+    environment: eval
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Check eval trigger
+        id: trigger
+        run: |
+          LAST_MSG=$(git log -1 --format=%s)
+          echo "commit_message=$LAST_MSG"
+          if [[ ! "$LAST_MSG" =~ ^eval: ]]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "Last commit does not start with 'eval:' — skipping eval."
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+            echo "Eval triggered by commit: $LAST_MSG"
+          fi
+
+      - name: Post skip summary (no eval trigger)
+        if: steps.trigger.outputs.skip == 'true'
+        run: |
+          {
+            echo "## Skill Eval"
+            echo ""
+            echo "Eval not requested — last commit message does not start with \`eval:\`."
+            echo "To trigger evals, create a commit with a message like:"
+            echo "\`\`\`"
+            echo 'git commit --allow-empty -m "eval: test building-blocks changes"'
+            echo "\`\`\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Detect changed skills with tiles
+        if: steps.trigger.outputs.skip != 'true'
+        id: detect
+        run: |
+          CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
+          # Extract unique tile directories (3 levels deep: skills/<org>/<tile>)
+          TILE_DIRS=$(echo "$CHANGED_FILES" \
+            | grep -oE '^skills/[^/]+/[^/]+' \
+            | sort -u || true)
+
+          if [ -z "$TILE_DIRS" ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "No skill files changed."
+          else
+            # Filter to only tile dirs that have a tile.json
+            EVAL_DIRS=""
+            for tile_dir in $TILE_DIRS; do
+              if [ -f "$tile_dir/tile.json" ]; then
+                EVAL_DIRS="$EVAL_DIRS $tile_dir"
+                echo "Found tile.json in $tile_dir"
+              else
+                echo "No tile.json in $tile_dir — skipping"
+              fi
+            done
+
+            if [ -z "$EVAL_DIRS" ]; then
+              echo "skip=true" >> "$GITHUB_OUTPUT"
+              echo "Changed skills have no tile.json — nothing to eval."
+            else
+              echo "skip=false" >> "$GITHUB_OUTPUT"
+              echo "dirs=$EVAL_DIRS" >> "$GITHUB_OUTPUT"
+            fi
+          fi
+
+      - name: Post skip summary (no qualifying tiles)
+        if: steps.trigger.outputs.skip != 'true' && steps.detect.outputs.skip == 'true'
+        run: |
+          {
+            echo "## Skill Eval"
+            echo ""
+            echo "No qualifying skills to evaluate — either no skill files were changed or changed skills have no \`tile.json\`."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: tesslio/setup-tessl@v2
+        if: steps.trigger.outputs.skip != 'true' && steps.detect.outputs.skip != 'true'
+        with:
+          token: ${{ secrets.TESSL_TOKEN }}
+
+      - name: Run evals
+        if: steps.trigger.outputs.skip != 'true' && steps.detect.outputs.skip != 'true'
+        run: |
+          PASS=0
+          FAIL=0
+          SUMMARY_ROWS=""
+
+          for tile_dir in ${{ steps.detect.outputs.dirs }}; do
+            TILE_NAME=$(basename "$tile_dir")
+            echo "::group::Evaluating $TILE_NAME ($tile_dir)"
+
+            EXIT_CODE=0
+            OUTPUT=$(tessl eval run "$tile_dir" 2>&1) || EXIT_CODE=$?
+            echo "$OUTPUT"
+            echo "::endgroup::"
+
+            if [ "$EXIT_CODE" -ne 0 ]; then
+              echo "::warning::tessl eval run failed for $TILE_NAME (exit code $EXIT_CODE)"
+              FAIL=$((FAIL + 1))
+              SUMMARY_ROWS="$SUMMARY_ROWS| $TILE_NAME | error | ❌ |\n"
+            else
+              PASS=$((PASS + 1))
+              SUMMARY_ROWS="$SUMMARY_ROWS| $TILE_NAME | passed | ✅ |\n"
+              # Show detailed results only for successful eval
+              echo "::group::Eval results for $TILE_NAME"
+              tessl eval view --last 2>&1 || true
+              echo "::endgroup::"
+            fi
+          done
+
+          TOTAL=$((PASS + FAIL))
+
+          {
+            echo "## Skill Eval"
+            echo ""
+            echo "| Tile | Result | Status |"
+            echo "|------|--------|--------|"
+            echo -e "$SUMMARY_ROWS"
+            echo "| **Total** | **$PASS/$TOTAL passed** | $([ "$FAIL" -eq 0 ] && echo '✅' || echo '❌') |"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          echo ""
+          echo "============================="
+          echo "  Skill Eval Summary"
+          echo "============================="
+          echo "  Total:  $TOTAL"
+          echo "  Passed: $PASS"
+          echo "  Failed: $FAIL"
+          echo "============================="
+
+          if [ "$FAIL" -gt 0 ]; then
+            echo "::error::$FAIL tile(s) failed evaluation"
+            exit 1
+          fi
+
