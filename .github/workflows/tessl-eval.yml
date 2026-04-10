@@ -47,32 +47,39 @@ jobs:
         id: detect
         run: |
           CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
-          # Extract unique tile directories (3 levels deep: skills/<org>/<tile>)
-          TILE_DIRS=$(echo "$CHANGED_FILES" \
-            | grep -oE '^skills/[^/]+/[^/]+' \
-            | sort -u || true)
 
-          if [ -z "$TILE_DIRS" ]; then
+          # Build list of all tile directories (parents of tile.json)
+          ALL_TILE_DIRS=$(find skills -name tile.json -exec dirname {} \; 2>/dev/null | sort)
+
+          if [ -z "$ALL_TILE_DIRS" ]; then
             echo "skip=true" >> "$GITHUB_OUTPUT"
-            echo "No skill files changed."
+            echo "No tile.json files found in repo."
           else
-            # Filter to only tile dirs that have a tile.json
-            EVAL_DIRS=""
-            for tile_dir in $TILE_DIRS; do
-              if [ -f "$tile_dir/tile.json" ]; then
-                EVAL_DIRS="$EVAL_DIRS $tile_dir"
-                echo "Found tile.json in $tile_dir"
-              else
-                echo "No tile.json in $tile_dir — skipping"
-              fi
+            # For each changed file, find which tile directory it belongs to
+            DIRS=""
+            for changed_file in $CHANGED_FILES; do
+              for tile_dir in $ALL_TILE_DIRS; do
+                case "$changed_file" in
+                  "$tile_dir"/*)
+                    # Check not already added
+                    case " $DIRS " in
+                      *" $tile_dir "*) ;;
+                      *) DIRS="$DIRS $tile_dir" ;;
+                    esac
+                    break
+                    ;;
+                esac
+              done
             done
 
-            if [ -z "$EVAL_DIRS" ]; then
+            DIRS=$(echo "$DIRS" | xargs)  # trim whitespace
+            if [ -z "$DIRS" ]; then
               echo "skip=true" >> "$GITHUB_OUTPUT"
-              echo "Changed skills have no tile.json — nothing to eval."
+              echo "Changed files don't belong to any tile — nothing to eval."
             else
               echo "skip=false" >> "$GITHUB_OUTPUT"
-              echo "dirs=$EVAL_DIRS" >> "$GITHUB_OUTPUT"
+              echo "dirs=$DIRS" >> "$GITHUB_OUTPUT"
+              echo "Changed tiles: $DIRS"
             fi
           fi
 
