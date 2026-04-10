@@ -147,7 +147,7 @@ jobs:
             echo "::group::Evaluating $TILE_NAME ($tile_dir)"
 
             EXIT_CODE=0
-            OUTPUT=$(tessl eval run "$tile_dir" --workspace adobe 2>&1) || EXIT_CODE=$?
+            OUTPUT=$(tessl eval run "$tile_dir" 2>&1) || EXIT_CODE=$?
             echo "$OUTPUT"
             echo "::endgroup::"
 
