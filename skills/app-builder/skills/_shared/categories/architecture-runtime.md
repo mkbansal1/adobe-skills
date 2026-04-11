@@ -16,7 +16,6 @@ Adobe I/O Runtime is built on Apache OpenWhisk. Actions are stateless functions 
 
 | Runtime | Node.js version | Status |
 | --- | --- | --- |
-| nodejs:24 | 24.x | Available on Stage only |
 | nodejs:22 | 22.x | Current (recommended) |
 | nodejs:20 | 20.x | Supported |
 | nodejs:18 | 18.x | Supported |
