@@ -18,8 +18,8 @@ component-definition.json          component-models.json         component-filte
 │   "template": {      │          │   "fields": [...]   │       │   "components": [    │
 │     "model": "hero"──┼─────────►│ }                   │       │     "hero",          │
 │     "filter": "cards"┼──────┐   └─────────────────────┘       │     "cards", ...     │
-│   }                  │      │                                  │   ]                  │
-│ }                    │      │                                  │ }                    │
+│   }                  │      │                                  │   ]                 │
+│ }                    │      │                                  │ }                   │
 └──────────────────────┘      │   ┌─────────────────────┐       │ {                    │
                               └──►│ "id": "cards",      │       │   "id": "cards",     │
                                   │ "components":["card"]│◄──────┤ }                    │
