@@ -13,7 +13,8 @@
     "./skills/admin",
     "./skills/whitepaper",
     "./skills/auth",
-    "./skills/ops"
+    "./skills/ops",
+    "./skills/admin-api"
   ],
   "hooks": {
     "PostToolUse": [
@@ -57,6 +58,7 @@
     "handover",
     "documentation",
     "whitepaper",
-    "pdf"
+    "pdf",
+    "admin-api"
   ]
 }
