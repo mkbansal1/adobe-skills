@@ -40,20 +40,37 @@ Bulk status reads from the content bus cache — same IMS Bearer token works, no
 
 ## Bulk Preview
 
-Triggers preview refresh for all paths under the given prefix.
+Triggers preview refresh for a set of paths or an entire folder. The JSON body determines scope:
+
+| Body | Behaviour |
+|---|---|
+| `{"paths": ["/en/help-center/*"]}` | Recursively previews all pages under that folder |
+| `{"paths": ["/en/about", "/ar/about"]}` | Previews only those explicit paths |
+| No body | Previews **all pages on the site** |
 
 ```bash
+# Folder prefix (most common — populate from user input)
+PATHS_JSON='{"paths": ["{user-provided-folder}/*"]}'
+
+# Explicit paths
+PATHS_JSON='{"paths": ["{path1}", "{path2}"]}'
+
+RESPONSE=$(curl -s -X POST \
+  -H "authorization: Bearer ${IMS_TOKEN}" \
+  -H "x-content-source-authorization: Bearer ${IMS_TOKEN}" \
+  -H "Content-Type: application/json" \
+  -d "${PATHS_JSON}" \
+  -o /tmp/admin_api_response.json \
+  -w "%{http_code}" \
+  "https://admin.hlx.page/preview/${ORG}/${SITE}/${REF}/*")
+
+# Full site — omit body entirely
 RESPONSE=$(curl -s -X POST \
   -H "authorization: Bearer ${IMS_TOKEN}" \
   -H "x-content-source-authorization: Bearer ${IMS_TOKEN}" \
   -o /tmp/admin_api_response.json \
   -w "%{http_code}" \
   "https://admin.hlx.page/preview/${ORG}/${SITE}/${REF}/*")
-```
-
-To preview a specific folder prefix (e.g. `/en/`):
-```bash
-"https://admin.hlx.page/preview/${ORG}/${SITE}/${REF}/en/*"
 ```
 
 **On success (202):** Returns a job object with `job.name`.
@@ -67,14 +84,22 @@ To preview a specific folder prefix (e.g. `/en/`):
 
 ## Bulk Publish
 
-Promotes all previewed paths under the given prefix to the live CDN.
+Promotes a list of previewed paths to the live CDN.
 
-**Important:** Only paths that have been previewed will be published. Unpreviewed paths are skipped.
+**Important:**
+- Only paths that have been previewed will be published. Unpreviewed paths are skipped.
+- **Wildcard paths (`/en/*`) are NOT supported** — the API returns `bulk-publish does not support publishing of subtrees due to security reasons`. Use explicit paths only.
+- To get the list of paths under a folder, run `bulk preview {folder}/*` first and extract paths from the job details.
 
 ```bash
+# Build PATHS_JSON from explicit paths provided by the user at runtime
+PATHS_JSON='{"paths": ["{path1}", "{path2}", "{path3}"]}'
+
 RESPONSE=$(curl -s -X POST \
   -H "authorization: Bearer ${IMS_TOKEN}" \
   -H "x-content-source-authorization: Bearer ${IMS_TOKEN}" \
+  -H "Content-Type: application/json" \
+  -d "${PATHS_JSON}" \
   -o /tmp/admin_api_response.json \
   -w "%{http_code}" \
   "https://admin.hlx.page/live/${ORG}/${SITE}/${REF}/*")
@@ -83,7 +108,7 @@ RESPONSE=$(curl -s -X POST \
 **On success (202):** Returns a job object with `job.name`.
 
 **Recommended next actions:**
-1. `get job status {job.name}` — monitor progress (topic: `live`)
+1. `get job status {job.name}` — monitor progress (topic: `publish`)
 2. `get job details {job.name}` — once stopped, surface any failed paths
 3. `purge cache {path}` — for any pages that still show stale content after publishing
 

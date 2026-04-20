@@ -42,7 +42,7 @@ Preview URL: https://{ref}--{site}--{org}.aem.page{path}
 ```
 
 **Recommended next actions:**
-1. Open the preview URL to review content
+1. Open the preview URL to review content — `https://{ref}--{site}--{org}.aem.page{path}` (use `preview.url` from the response)
 2. `publish {path}` — when approved, promote to live
 3. `status {path}` — verify timestamps if something looks off
 
@@ -121,7 +121,7 @@ Live URL: https://main--{site}--{org}.aem.live{path}
 ```
 
 **Recommended next actions:**
-1. Open the live URL to confirm — CDN propagation takes up to 60 seconds
+1. Open the live URL to confirm — `https://main--{site}--{org}.aem.live{path}` (use `live.url` from the response) — CDN propagation takes up to 60 seconds
 2. `purge cache {path}` — if live URL still shows old content after 60 seconds
 3. `status {path}` — verify `live.lastModified` updated correctly
 

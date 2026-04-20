@@ -37,7 +37,7 @@ RESPONSE=$(curl -s -X POST \
 
 **Recommended next actions:**
 1. Hard-refresh the browser — `Cmd+Shift+R` (Mac) / `Ctrl+Shift+R` (Windows/Linux)
-2. Wait 5–10 seconds, then open the live URL to confirm content is fresh
+2. Wait 5–10 seconds, then open the live URL to confirm content is fresh — `https://main--{site}--{org}.aem.live{path}`
 3. `status {path}` — if content still appears stale, check whether publish actually ran
 
 ---

@@ -24,8 +24,7 @@ Use this skill when the user wants to:
 
 Do NOT use for:
 - ❌ Content editing (use DA or SharePoint/Google Drive)
-- ❌ Config Service changes — org/site config, users, secrets (use `project-management:admin`)
-- ❌ Search index or sitemap management
+- ❌ Config Service changes — org/site config, users, secrets
 
 ## Workflow
 
@@ -73,27 +72,51 @@ IMS_TOKEN=$(grep -o '"imsToken"[[:space:]]*:[[:space:]]*"[^"]*"' \
 
 ## Step 2: Resolve Project Context
 
-Derive `org`, `site`, and `ref` from the git remote. No manual configuration needed.
+Derive `org`, `site`, and `ref` for Admin API calls. The AEM `org` and `site` are **not always the same as the GitHub owner and repo** — for example, a GitHub repo `my-org/my-eds-repo` may serve an AEM site with a different name. Always prefer saved config over git remote.
+
+### Priority order
+
+**1. Read from saved project config (preferred):**
 
 ```bash
-REMOTE_URL=$(git remote get-url origin 2>/dev/null)
+ORG=$(grep -o '"org"[[:space:]]*:[[:space:]]*"[^"]*"' \
+  .claude-plugin/project-config.json 2>/dev/null \
+  | sed 's/"org"[[:space:]]*:[[:space:]]*"//' | sed 's/"$//')
 
-# Works for both SSH (git@github.com:org/site.git) and HTTPS remotes
-ORG=$(echo "$REMOTE_URL"  | sed -E 's|.*[:/]([^/]+)/[^/]+\.git.*|\1|')
-SITE=$(echo "$REMOTE_URL" | sed -E 's|.*[:/][^/]+/([^/]+)\.git.*|\1|')
-REF=$(git branch --show-current)
+SITE=$(grep -o '"site"[[:space:]]*:[[:space:]]*"[^"]*"' \
+  .claude-plugin/project-config.json 2>/dev/null \
+  | sed 's/"site"[[:space:]]*:[[:space:]]*"//' | sed 's/"$//')
+
+REF=$(grep -o '"ref"[[:space:]]*:[[:space:]]*"[^"]*"' \
+  .claude-plugin/project-config.json 2>/dev/null \
+  | sed 's/"ref"[[:space:]]*:[[:space:]]*"//' | sed 's/"$//')
 ```
 
-**If auto-detection fails** (non-GitHub remote or no remote set):
+**2. Parse from an AEM page URL if the user provides one:**
 
+If the user provides a URL like `https://{ref}--{site}--{org}.aem.page/en/about`:
 ```bash
-if [ -z "$ORG" ] || [ -z "$SITE" ]; then
-  # Ask the user for the values using AskUserQuestion
-  echo "Could not detect org/site from git remote. Please provide:"
-  echo "  ORG  = GitHub organisation name"
-  echo "  SITE = GitHub repository name"
-fi
+AEM_URL="{user-provided URL}"
+REF=$(echo  "$AEM_URL" | sed -E 's|https://([^-]+)--.*|\1|')
+SITE=$(echo "$AEM_URL" | sed -E 's|https://[^-]+--([^-]+)--.*|\1|')
+ORG=$(echo  "$AEM_URL" | sed -E 's|https://[^-]+--[^-]+--([^.]+)\.aem.*|\1|')
+PATH_ARG=$(echo "$AEM_URL" | sed -E 's|https://[^/]+(/.*)?|\1|')
 ```
+
+**3. Ask the user — only if both above fail:**
+
+```
+Could not detect org/site. Please provide the AEM preview URL for this project,
+e.g. https://{ref}--{site}--{org}.aem.page — or supply org, site, and ref directly.
+```
+
+Save to project config once resolved so future operations don't need to ask:
+```bash
+echo "{\"org\": \"${ORG}\", \"site\": \"${SITE}\", \"ref\": \"${REF}\"}" \
+  > .claude-plugin/project-config.json
+```
+
+> **Code bus operations** (`resources/code-bus.md`) use the GitHub `OWNER` and `REPO` — not `ORG`/`SITE`. Parse those from the GitHub URL provided by the user, as documented in `resources/code-bus.md`.
 
 **Success criteria:**
 - ✅ `ORG`, `SITE`, and `REF` are non-empty
@@ -130,8 +153,9 @@ After every operation, handle the HTTP status code and report clearly:
 BODY=$(cat /tmp/admin_api_response.json 2>/dev/null)
 
 case "$RESPONSE" in
-  200|201|204)
+  200|201|202|204)
     # Success — show operation-specific output from Step 3
+    # 202 = async job started (bulk ops); extract job.name and direct user to job monitoring
     echo "$BODY" | python3 -m json.tool 2>/dev/null || echo "$BODY"
     ;;
   401)

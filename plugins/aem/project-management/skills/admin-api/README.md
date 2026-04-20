@@ -95,7 +95,7 @@ Fetches the latest content from the authoring system and renders it to the previ
 **Response:** Preview URL — `https://{ref}--{site}--{org}.aem.page{path}`
 
 **Next steps after preview:**
-1. Open the preview URL to review
+1. Open the preview URL — `https://{ref}--{site}--{org}.aem.page{path}` (shown in response)
 2. `publish {path}` — when approved
 3. `status {path}` — if something looks off
 
@@ -124,7 +124,7 @@ Promotes the current preview version to the live production CDN.
 **Response:** Live URL — `https://main--{site}--{org}.aem.live{path}`
 
 **Next steps after publish:**
-1. Open the live URL (CDN propagation takes up to 60 seconds)
+1. Open the live URL — `https://main--{site}--{org}.aem.live{path}` (shown in response) — CDN propagation takes up to 60 seconds
 2. `purge cache {path}` — if live URL still shows old content after 60 seconds
 3. `status {path}` — verify `live.lastModified` updated
 
@@ -246,21 +246,23 @@ Triggers preview refresh for all paths under a given prefix. Returns an async jo
 
 ### 7. Bulk Publish
 
-Promotes all previewed pages under a prefix to the live CDN. Unpreviewed pages are skipped.
+Promotes a list of previewed pages to the live CDN. Unpreviewed pages are skipped.
 
-**Admin API:** `POST /live/{org}/{site}/{ref}/*`
+**Admin API:** `POST /live/{org}/{site}/{ref}/*` with JSON body `{"paths": [...]}`
 **Docs:** https://www.aem.live/docs/admin.html#tag/live/operation/liveBulkPost
 
-**Use when:** Releasing a campaign, going live with a full section after bulk preview.
+**Use when:** Publishing multiple pages together after a bulk preview.
+
+> **Important:** Wildcard paths (e.g. `/en/*`) are **not supported** — the API returns `bulk-publish does not support publishing of subtrees due to security reasons`. Always pass explicit paths. To get the list of paths in a folder, run `bulk preview {folder}/*` first and use the paths from the job details.
 
 **Examples:**
 
 | What you say | What happens |
 |---|---|
-| `bulk publish /en/` | Publishes all previewed `/en/` pages |
-| `publish all pages` | Publishes all previewed pages (root `/*`) |
-| `go live with /en/campaign/` | Publishes all campaign pages |
-| `bulk publish /ar/` | Publishes all previewed Arabic pages |
+| `bulk publish /en/about, /ar/about, /en/index` | Publishes those 3 explicit paths |
+| `bulk publish all pages under /en/help-center/` | Skill runs bulk preview to discover paths, then publishes each |
+| `go live with pages from the last preview job` | Skill extracts paths from job details and publishes them |
+| `publish all pages in /en/campaign/` | Skill discovers paths via bulk preview job, then bulk publishes |
 
 **Response:** HTTP 202 + `job.name`. Monitor with `get job status {job.name}`.
 
@@ -520,12 +522,12 @@ Removes a path from the search index. Use after unpublishing a page.
 ### Campaign Release (Bulk)
 
 ```
-1. bulk preview /en/campaign/    → preview all campaign pages
-2. get job status {job.name}     → wait for job to stop
-3. bulk status /en/campaign/     → verify all pages are ready
-4. bulk publish /en/campaign/    → go live
-5. get job status {job.name}     → confirm publish completed
-6. get job details {job.name}    → check for any failed paths
+1. bulk preview /en/campaign/          → preview all campaign pages (returns job)
+2. get job status {job.name}           → wait for preview job to stop
+3. get job details {job.name}          → extract the list of previewed paths
+4. bulk publish {explicit paths}       → go live (wildcards not supported — use paths from step 3)
+5. get job status {publish job.name}   → confirm publish completed
+6. get job details {publish job.name}  → check for any failed paths
 ```
 
 ### Unpublish and Clean Up
@@ -553,7 +555,9 @@ Removes a path from the search index. Use after unpublishing a page.
 | Limitation | Detail |
 |---|---|
 | Bulk preview/publish on DA sites | Wildcard bulk ops not supported on DA (markup) mountpoints — use DA bulk publish UI or AEM Sidekick instead |
+| Bulk publish wildcards | Wildcard paths (e.g. `/en/*`) return 400 — use explicit path lists only. Run bulk preview first to discover paths |
 | Bulk cache purge | No per-path bulk API — skill loops individually or uses `/*` for full site purge |
 | Code sync wildcard | Only root `/*` supported — `/blocks/*` returns 400 |
 | Index operations | Only meaningful if project has `query-index.json` |
 | Code bus auth | Requires IMS token linked to a GitHub account with repo access — GitHub PATs not accepted |
+| Code bus job monitoring | Code topic jobs use GitHub `owner/repo` in the URL, not AEM `org/site` |
