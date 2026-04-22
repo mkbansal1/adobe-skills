@@ -153,21 +153,10 @@ echo "IMS_TOKEN=${IMS_TOKEN:+set}"
 
 ### Step 2: Load Full Configuration
 
-After auth is confirmed, load remaining config:
-
-```bash
-CONFIG=$(cat .claude-plugin/project-config.json 2>/dev/null)
-ORG=$(echo "$CONFIG" | grep -o '"org"[[:space:]]*:[[:space:]]*"[^"]*"' | sed 's/"org"[[:space:]]*:[[:space:]]*"//' | sed 's/"$//')
-AUTH_TOKEN=$(echo "$CONFIG" | grep -o '"authToken"[[:space:]]*:[[:space:]]*"[^"]*"' | sed 's/"authToken"[[:space:]]*:[[:space:]]*"//' | sed 's/"$//')
-IMS_TOKEN=$(echo "$CONFIG" | grep -o '"imsToken"[[:space:]]*:[[:space:]]*"[^"]*"' | sed 's/"imsToken"[[:space:]]*:[[:space:]]*"//' | sed 's/"$//')
-SITE=$(echo "$CONFIG" | grep -o '"site"[[:space:]]*:[[:space:]]*"[^"]*"' | sed 's/"site"[[:space:]]*:[[:space:]]*"//' | sed 's/"$//')
-REF=$(echo "$CONFIG" | grep -o '"ref"[[:space:]]*:[[:space:]]*"[^"]*"' | sed 's/"ref"[[:space:]]*:[[:space:]]*"//' | sed 's/"$//')
-
-REF=${REF:-main}
-echo "Config: org=$ORG site=$SITE ref=$REF auth=${AUTH_TOKEN:+set} ims=${IMS_TOKEN:+set}"
-```
-
-Read `resources/config.md` for setup instructions if site or other values are missing.
+Read `resources/config.md`:
+- **"Load Configuration"** section — loads `ORG`, `AUTH_TOKEN`, `IMS_TOKEN`, `SITE`, `REF`, `CODE_OWNER`, `CODE_REPO` from saved config
+- **"Parse from AEM URL"** section — if the user's request contains an `*.aem.page` or `*.aem.live` URL, parse `REF`, `SITE`, `ORG`, `PATH` from it (overrides saved config values)
+- **"Setup If Missing"** section — if any required value is still empty after loading
 
 ### Step 3: Route by Intent
 

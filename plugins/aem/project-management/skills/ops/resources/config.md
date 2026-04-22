@@ -14,6 +14,7 @@ Shared configuration loading and setup for all ops operations.
 CONFIG=$(cat .claude-plugin/project-config.json 2>/dev/null)
 ORG=$(echo "$CONFIG" | grep -o '"org"[[:space:]]*:[[:space:]]*"[^"]*"' | sed 's/"org"[[:space:]]*:[[:space:]]*"//' | sed 's/"$//')
 AUTH_TOKEN=$(echo "$CONFIG" | grep -o '"authToken"[[:space:]]*:[[:space:]]*"[^"]*"' | sed 's/"authToken"[[:space:]]*:[[:space:]]*"//' | sed 's/"$//')
+IMS_TOKEN=$(echo "$CONFIG" | grep -o '"imsToken"[[:space:]]*:[[:space:]]*"[^"]*"' | sed 's/"imsToken"[[:space:]]*:[[:space:]]*"//' | sed 's/"$//')
 SITE=$(echo "$CONFIG" | grep -o '"site"[[:space:]]*:[[:space:]]*"[^"]*"' | sed 's/"site"[[:space:]]*:[[:space:]]*"//' | sed 's/"$//')
 REF=$(echo "$CONFIG" | grep -o '"ref"[[:space:]]*:[[:space:]]*"[^"]*"' | sed 's/"ref"[[:space:]]*:[[:space:]]*"//' | sed 's/"$//')
 CODE_OWNER=$(echo "$CONFIG" | grep -o '"codeOwner"[[:space:]]*:[[:space:]]*"[^"]*"' | sed 's/"codeOwner"[[:space:]]*:[[:space:]]*"//' | sed 's/"$//')
@@ -21,13 +22,52 @@ CODE_REPO=$(echo "$CONFIG" | grep -o '"codeRepo"[[:space:]]*:[[:space:]]*"[^"]*"
 
 REF=${REF:-main}
 
-echo "org=$ORG"
-echo "site=$SITE"
-echo "ref=$REF"
-echo "auth=${AUTH_TOKEN:+set}"
-echo "codeOwner=$CODE_OWNER"
-echo "codeRepo=$CODE_REPO"
+echo "org=$ORG site=$SITE ref=$REF auth=${AUTH_TOKEN:+set} ims=${IMS_TOKEN:+set} codeOwner=$CODE_OWNER codeRepo=$CODE_REPO"
 ```
+
+## Parse from AEM URL
+
+**If the user's request contains an AEM URL**, use this block to extract `REF`, `SITE`, `ORG`, and `PATH` directly from it. These values override anything loaded from saved config.
+
+Supports both `*.aem.page` and `*.aem.live` URLs, trailing slashes, root paths, and hyphenated ref/site/org names (e.g. `feature-x`, `hmns-uat-qa-da`).
+
+```bash
+eval $(python3 -c "
+import re
+
+url = '{USER_PROVIDED_URL}'
+url = url.rstrip('/') or '/'
+
+m = re.match(r'https://(.+)\.aem\.(?:page|live)(/.+)?', url)
+if m:
+    hostname = m.group(1)          # e.g. 'uat--hmns-uat-kw--alshaya-axp'
+    path = (m.group(2) or '/').rstrip('/') or '/'
+    parts = hostname.split('--')   # split on double-hyphen separator
+    if len(parts) >= 3:
+        ref  = parts[0]            # first segment
+        org  = parts[-1]           # last segment
+        site = '--'.join(parts[1:-1])  # everything in between (preserves hyphens)
+        print(f'REF={ref}')
+        print(f'SITE={site}')
+        print(f'ORG={org}')
+        print(f'PATH={path}')
+    else:
+        print('# Could not split hostname into ref--site--org parts')
+else:
+    print('# URL did not match AEM pattern — using saved config values')
+" 2>/dev/null)
+
+echo "Parsed: org=$ORG site=$SITE ref=$REF path=$PATH"
+```
+
+**Examples:**
+
+| User URL | REF | SITE | ORG | PATH |
+|----------|-----|------|-----|------|
+| `https://uat--hmns-uat-kw--alshaya-axp.aem.page/en/shop-women` | `uat` | `hmns-uat-kw` | `alshaya-axp` | `/en/shop-women` |
+| `https://main--eds-web--alshaya-axp.aem.page/` | `main` | `eds-web` | `alshaya-axp` | `/` |
+| `https://uat--hmns-uat-qa-da--alshaya-axp.aem.live/en/help-center/` | `uat` | `hmns-uat-qa-da` | `alshaya-axp` | `/en/help-center` |
+| `https://feature-x--my-site--my-org.aem.page/en/blog/post` | `feature-x` | `my-site` | `my-org` | `/en/blog/post` |
 
 ## Setup If Missing
 
