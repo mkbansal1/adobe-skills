@@ -71,3 +71,9 @@ curl -s -X POST \
 |-----------|-----------|
 | "show sitemap config" | Read sitemap config |
 | "update sitemap config" | Update sitemap config |
+
+## Success Criteria
+
+- ✅ Current sitemap configuration retrieved and displayed clearly
+- ✅ Config changes applied with HTTP 200 and the updated YAML confirmed to user
+- ✅ User reminded to regenerate the sitemap after configuration changes take effect

@@ -84,3 +84,10 @@ curl -s -X POST \
 | "create sitemap at /sitemaps/blog.xml" | Generate at custom path |
 | "update the sitemap" | Generate at `/sitemap.xml` |
 | "refresh sitemap" | Generate at `/sitemap.xml` |
+
+## Success Criteria
+
+- ✅ HTTP 200 received confirming sitemap generation completed
+- ✅ Sitemap URL reported to user — `https://{ref}--{site}--{org}.aem.page{path}`
+- ✅ Custom sitemap path acknowledged when user specifies a non-default location
+- ✅ User reminded to submit the sitemap URL to search engines after generation

@@ -145,3 +145,10 @@ For each page:
 - Index updates when pages are previewed/published
 - Large sites may have paginated results (check `offset` and `limit` in response)
 - Custom indexes may have different fields based on helix-query.yaml config
+
+## Success Criteria
+
+- ✅ Query index fetched and total page count reported to user
+- ✅ All page paths listed with their preview and live URLs
+- ✅ User informed if index is empty or not yet populated (pages need to be previewed/published first)
+- ✅ Paginated results handled — all pages retrieved if total exceeds default limit

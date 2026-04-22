@@ -230,3 +230,10 @@ curl -s -X DELETE \
 | "add secret for site" | Create site secret |
 | "delete secret X" | Delete secret |
 | "show secrets" | List secrets |
+
+## Success Criteria
+
+- ✅ Secret list shows names and IDs (values are never returned by the API — this is expected)
+- ✅ New secret confirmed with HTTP 200 and user warned that the value cannot be retrieved after creation
+- ✅ Destructive operations (delete secret) confirmed with user before executing, with note on impacted services
+- ✅ User reminded to update dependent services when a secret is rotated or deleted

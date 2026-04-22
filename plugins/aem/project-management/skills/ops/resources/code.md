@@ -178,3 +178,10 @@ Only execute after confirmation.
 | "deploy code changes" | Full repo sync |
 | "update the code" | Full repo sync |
 | "delete code blocks/old.js" | Delete code file |
+
+## Success Criteria
+
+- ✅ HTTP 200 received confirming the code sync completed
+- ✅ Repoless impact acknowledged — user warned that sync affects all sites sharing the repo
+- ✅ File-specific sync confirms the exact path that was deployed
+- ✅ Code status check shows the deployed version matches the expected GitHub commit

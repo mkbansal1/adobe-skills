@@ -276,3 +276,11 @@ Allow: /' \
 | "show robots.txt" | Read robots.txt |
 | "update robots.txt" | Update robots.txt |
 | "block crawlers from /private" | Update robots.txt |
+
+## Success Criteria
+
+- ✅ Org or site configuration retrieved and displayed in full
+- ✅ Create or update confirmed with HTTP 200 and the applied changes summarized to user
+- ✅ Critical destructive operations (delete org/site config) require typed confirmation before executing
+- ✅ Robots.txt changes confirmed with HTTP 200 and the updated rules shown to user
+- ✅ User directed to verify affected pages or re-read config to confirm changes took effect

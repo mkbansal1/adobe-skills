@@ -182,3 +182,10 @@ done
 | "what site am I on" | Show current site |
 | "preview /about on all sites" | Cross-site operation |
 | "preview /about on site-b" | Specific site operation |
+
+## Success Criteria
+
+- ✅ Site list shows all sites under the org with their names and associated repos
+- ✅ Active site context updated in `.claude-plugin/project-config.json` after a switch
+- ✅ Repoless architecture detected and communicated when relevant to an operation
+- ✅ Branch switch confirmed and user reminded that subsequent operations target the new branch

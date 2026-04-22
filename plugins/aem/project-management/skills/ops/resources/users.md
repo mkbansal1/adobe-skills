@@ -279,3 +279,11 @@ curl -s -X DELETE \
 | "list org users" | List org users |
 | "add user to org" | Add org user |
 | "remove user from org" | Remove org user |
+
+## Success Criteria
+
+- ✅ User list shows current admins and authors with their email addresses
+- ✅ Add operation confirmed with HTTP 200 and the updated access list shown to user
+- ✅ Destructive operations (remove user) confirmed with user before executing, with role and impact stated clearly
+- ✅ Org-level fallback used automatically when site-level `access.json` returns 404
+- ✅ Profile check reports the authenticated user's email and display name

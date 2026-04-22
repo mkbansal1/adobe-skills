@@ -188,3 +188,10 @@ echo "User: $USER_EMAIL | Admin: $IS_ADMIN | Author: $IS_AUTHOR"
   "codeRepo": "shared-eds-code"
 }
 ```
+
+## Success Criteria
+
+- ✅ All required variables loaded: `ORG`, `SITE`, `REF`, `AUTH_TOKEN`
+- ✅ AEM URL parsed correctly into `ORG`, `SITE`, `REF`, `PATH` when provided
+- ✅ Missing org or auth token detected early and user prompted before any API call is made
+- ✅ Auth re-triggered automatically when `AUTH_TOKEN` is absent or expired

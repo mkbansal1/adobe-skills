@@ -297,3 +297,11 @@ curl -s -X POST \
 | "lock snapshot q2-launch for review" | Request review |
 | "approve snapshot q2-launch" | Approve |
 | "reject snapshot q2-launch" | Reject |
+
+## Success Criteria
+
+- ✅ Snapshot created or updated with HTTP 200 and ID confirmed to user
+- ✅ Manifest shows correct resource paths after add/remove operations
+- ✅ Publish confirmed with page count and live URLs for the released pages
+- ✅ Destructive operations (delete snapshot) confirmed with user before executing
+- ✅ Review workflow state (locked / approved / rejected) reported clearly after each transition

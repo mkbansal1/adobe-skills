@@ -134,3 +134,10 @@ Log levels: `info`, `warn`, `error`
 | "what happened yesterday" | Get logs `since=24h` |
 | "audit log" | Get logs |
 | "activity log" | Get logs |
+
+## Success Criteria
+
+- ✅ Log entries retrieved and displayed with timestamps, operation types, and affected paths
+- ✅ Time filter applied correctly — user informed of the date range covered
+- ✅ Manual log entry confirmed with HTTP 200 and the recorded message shown to user
+- ✅ Empty result set explained — user informed if no activity occurred in the requested window

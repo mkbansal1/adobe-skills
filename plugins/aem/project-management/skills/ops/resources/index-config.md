@@ -71,3 +71,9 @@ curl -s -X POST \
 |-----------|-----------|
 | "show index config" | Read index config |
 | "update index config" | Update index config |
+
+## Success Criteria
+
+- ✅ Current index configuration retrieved and displayed clearly
+- ✅ Config changes applied with HTTP 200 and the updated YAML confirmed to user
+- ✅ User reminded to re-index affected pages after schema changes take effect

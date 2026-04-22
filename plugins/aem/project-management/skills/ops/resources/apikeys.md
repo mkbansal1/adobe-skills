@@ -248,3 +248,11 @@ curl -s -X DELETE \
 | "revoke API key X" | Delete API key |
 | "delete API key X" | Delete API key |
 | "show API keys" | List API keys |
+
+## Success Criteria
+
+- ✅ API key list shows IDs, descriptions, roles, and expiration dates
+- ✅ New API key value shown to user once at creation with a clear "store securely" warning
+- ✅ Revoke operation confirmed with HTTP 200 and user reminded to update dependent pipelines
+- ✅ Destructive operations (revoke key) confirmed with user before executing, with affected services stated
+- ✅ Org-level keys read from org config (`/config/{org}.json`) — dedicated endpoint is not used

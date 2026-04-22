@@ -108,3 +108,10 @@ curl -s -X POST \
 | "purge everything" | Purge `/*` |
 | "invalidate cache" | Purge cache |
 | "bust the cache for /products" | Purge `/products` |
+
+## Success Criteria
+
+- ✅ HTTP 200 received for each purged path
+- ✅ User instructed to hard-refresh the browser (`Cmd+Shift+R` / `Ctrl+Shift+R`) after purge
+- ✅ For full-site purge: user informed to wait 10–15 seconds before checking
+- ✅ If content still appears stale after purge, user directed to verify publish ran first

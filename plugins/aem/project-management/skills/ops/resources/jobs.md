@@ -168,3 +168,10 @@ Monitor job completion before starting new jobs to avoid hitting limits.
 | "cancel job index-456" | Stop job |
 | "what jobs are running" | List jobs |
 | "check bulk operation status" | List jobs |
+
+## Success Criteria
+
+- ✅ Job state reported clearly (running / completed / failed / stopped)
+- ✅ Job details include processed count, error count, and any failed paths
+- ✅ Stop operation confirmed with user before executing
+- ✅ User directed to re-run the bulk operation for any failed paths after a job completes

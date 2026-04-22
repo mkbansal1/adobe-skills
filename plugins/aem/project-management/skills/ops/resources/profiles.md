@@ -141,3 +141,10 @@ Profiles can include settings for:
 | "update profile config" | Update profile config |
 | "create profile for X" | Create profile config |
 | "delete profile X" | Delete profile config |
+
+## Success Criteria
+
+- ✅ Profile configuration retrieved and displayed clearly
+- ✅ Create or update confirmed with HTTP 200 and the applied properties shown to user
+- ✅ Destructive operations (delete profile) confirmed with user before executing
+- ✅ User reminded to preview affected pages to verify profile rules took effect

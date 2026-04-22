@@ -362,3 +362,12 @@ Branch URLs: `https://{branch}--{site}--{org}.aem.live{path}`
 | "unpublish /old-1, /old-2, /old-3" | Bulk unpublish (confirm) |
 | "check status of /about" | Status check |
 | "is /blog/post published?" | Status check (live) |
+
+## Success Criteria
+
+- ✅ HTTP 200 or 201 received from the Admin API
+- ✅ Preview or live URL shown to user after a successful operation
+- ✅ Bulk operations report the job ID and user is directed to check job status
+- ✅ Status checks display a layered summary (preview / live / edit timestamps)
+- ✅ Destructive operations (unpublish, delete preview) confirmed with user before executing
+- ✅ Recommended next actions communicated based on the operation result

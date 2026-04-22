@@ -120,3 +120,10 @@ curl -s -X POST \
 | "restore version X" | Restore version |
 | "rollback to version X" | Restore version |
 | "delete version X" | Delete version |
+
+## Success Criteria
+
+- ✅ Version list shows all available versions with timestamps and identifiers
+- ✅ Restore operation applied with HTTP 200 and the restored version confirmed to user
+- ✅ Destructive operations (delete version, restore — which overwrites current) confirmed with user before executing
+- ✅ User directed to verify configuration after a restore to confirm the correct state was applied

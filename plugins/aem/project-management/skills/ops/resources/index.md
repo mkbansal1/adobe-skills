@@ -143,3 +143,10 @@ curl -s -X DELETE \
 | "remove /old-page from search" | Delete from index |
 | "reindex /a, /b, /c" | Bulk re-index |
 | "refresh the index" | Re-index (ask for path) |
+
+## Success Criteria
+
+- ✅ HTTP 200 received confirming the index operation completed
+- ✅ Bulk re-index reports the job ID and user is directed to monitor job status
+- ✅ Index removal confirmed — deleted pages no longer surface in search results
+- ✅ Recommended next actions communicated based on whether the operation was single or bulk

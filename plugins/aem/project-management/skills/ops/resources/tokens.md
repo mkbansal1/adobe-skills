@@ -125,3 +125,10 @@ curl -s -X DELETE \
 | "create token" | Create token |
 | "revoke token X" | Revoke token |
 | "delete token X" | Revoke token |
+
+## Success Criteria
+
+- ✅ Token list shows all active tokens with IDs, descriptions, and expiration dates
+- ✅ New token value shown to user once at creation with a clear "store securely" warning
+- ✅ Token revocation confirmed with HTTP 200 and user reminded to update dependent services
+- ✅ Destructive operations (revoke) confirmed with user before executing
