@@ -42,11 +42,19 @@ Preview, publish, unpublish, and status operations for Edge Delivery Services co
 
 ## Operations
 
+## Auth
+
+| Operation | Header |
+|-----------|--------|
+| Preview, Publish, Unpublish, Delete preview | `authorization: Bearer ${IMS_TOKEN}` + `x-content-source-authorization: Bearer ${IMS_TOKEN}` |
+| Status checks (GET /status, GET /preview, GET /live) | `authorization: token ${AUTH_TOKEN}` |
+
 ### Preview (Single)
 
 ```bash
 curl -s -X POST \
-  -H "x-auth-token: ${AUTH_TOKEN}" \
+  -H "authorization: Bearer ${IMS_TOKEN}" \
+  -H "x-content-source-authorization: Bearer ${IMS_TOKEN}" \
   "https://admin.hlx.page/preview/${ORG}/${SITE}/${REF}${PATH}"
 ```
 
@@ -56,9 +64,35 @@ curl -s -X POST \
 
 **Limit: 1000 paths max per request.** For larger sets, batch into multiple calls.
 
+**⚠️ DA (Document Authoring) Limitation:** Wildcard bulk preview is **not supported** on sites using DA as the content source. The API returns:
+> `wildcard paths are not supported with a markup mountpoint`
+
+Check the site's content source type before running bulk operations:
 ```bash
+curl -s -H "x-auth-token: ${AUTH_TOKEN}" \
+  "https://admin.hlx.page/config/${ORG}/sites/${SITE}.json" \
+  | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('content',{}).get('source',{}).get('type','unknown'))"
+```
+
+| `content.source.type` | Wildcard bulk supported? |
+|---|---|
+| `markup` (DA) | ❌ No — use explicit paths only |
+| `onedrive` (SharePoint) | ✅ Yes |
+| `google` (Google Drive) | ✅ Yes |
+
+```bash
+# Folder wildcard — supported on SharePoint/Google Drive sites only
 curl -s -X POST \
-  -H "x-auth-token: ${AUTH_TOKEN}" \
+  -H "authorization: Bearer ${IMS_TOKEN}" \
+  -H "x-content-source-authorization: Bearer ${IMS_TOKEN}" \
+  -H "Content-Type: application/json" \
+  -d '{"paths": ["/en/help-center/*"]}' \
+  "https://admin.hlx.page/preview/${ORG}/${SITE}/${REF}/*"
+
+# Explicit paths — works on ALL sites including DA
+curl -s -X POST \
+  -H "authorization: Bearer ${IMS_TOKEN}" \
+  -H "x-content-source-authorization: Bearer ${IMS_TOKEN}" \
   -H "Content-Type: application/json" \
   -d '{"paths": ["/path1", "/path2"]}' \
   "https://admin.hlx.page/preview/${ORG}/${SITE}/${REF}/*"
@@ -72,7 +106,8 @@ Before executing, confirm with user: "This will delete the preview for {path}. P
 
 ```bash
 curl -s -X DELETE \
-  -H "x-auth-token: ${AUTH_TOKEN}" \
+  -H "authorization: Bearer ${IMS_TOKEN}" \
+  -H "x-content-source-authorization: Bearer ${IMS_TOKEN}" \
   "https://admin.hlx.page/preview/${ORG}/${SITE}/${REF}${PATH}"
 ```
 
@@ -80,7 +115,8 @@ curl -s -X DELETE \
 
 ```bash
 curl -s -X POST \
-  -H "x-auth-token: ${AUTH_TOKEN}" \
+  -H "authorization: Bearer ${IMS_TOKEN}" \
+  -H "x-content-source-authorization: Bearer ${IMS_TOKEN}" \
   "https://admin.hlx.page/live/${ORG}/${SITE}/${REF}${PATH}"
 ```
 
@@ -90,9 +126,18 @@ curl -s -X POST \
 
 **Limit: 1000 paths max per request.** For larger sets, batch into multiple calls.
 
+**⚠️ Two restrictions apply:**
+1. **DA sites:** Wildcard paths not supported — use explicit paths only (same as bulk preview)
+2. **All sites:** Wildcard subtree publish (`/en/*`) is blocked by the API for security reasons — explicit paths required
+
+> `bulk-publish does not support publishing of subtrees due to security reasons`
+
+Use explicit paths only:
+
 ```bash
 curl -s -X POST \
-  -H "x-auth-token: ${AUTH_TOKEN}" \
+  -H "authorization: Bearer ${IMS_TOKEN}" \
+  -H "x-content-source-authorization: Bearer ${IMS_TOKEN}" \
   -H "Content-Type: application/json" \
   -d '{"paths": ["/path1", "/path2"]}' \
   "https://admin.hlx.page/live/${ORG}/${SITE}/${REF}/*"
@@ -111,7 +156,8 @@ Before executing, you MUST:
 
 ```bash
 curl -s -X DELETE \
-  -H "x-auth-token: ${AUTH_TOKEN}" \
+  -H "authorization: Bearer ${IMS_TOKEN}" \
+  -H "x-content-source-authorization: Bearer ${IMS_TOKEN}" \
   "https://admin.hlx.page/live/${ORG}/${SITE}/${REF}${PATH}"
 ```
 
@@ -131,7 +177,8 @@ Before executing, you MUST:
 
 ```bash
 curl -s -X DELETE \
-  -H "x-auth-token: ${AUTH_TOKEN}" \
+  -H "authorization: Bearer ${IMS_TOKEN}" \
+  -H "x-content-source-authorization: Bearer ${IMS_TOKEN}" \
   -H "Content-Type: application/json" \
   -d '{"paths": ["/old-1", "/old-2", "/old-3"]}' \
   "https://admin.hlx.page/live/${ORG}/${SITE}/${REF}/*"
@@ -141,7 +188,7 @@ curl -s -X DELETE \
 
 ```bash
 curl -s \
-  -H "x-auth-token: ${AUTH_TOKEN}" \
+  -H "authorization: token ${AUTH_TOKEN}" \
   "https://admin.hlx.page/status/${ORG}/${SITE}/${REF}${PATH}"
 ```
 
@@ -149,7 +196,7 @@ curl -s \
 
 ```bash
 curl -s -X POST \
-  -H "x-auth-token: ${AUTH_TOKEN}" \
+  -H "authorization: token ${AUTH_TOKEN}" \
   -H "Content-Type: application/json" \
   -d '{"paths": ["/page-1", "/page-2"]}' \
   "https://admin.hlx.page/status/${ORG}/${SITE}/${REF}/*"
@@ -162,7 +209,8 @@ All operations support feature branches:
 ```bash
 # Preview on feature branch
 curl -s -X POST \
-  -H "x-auth-token: ${AUTH_TOKEN}" \
+  -H "authorization: Bearer ${IMS_TOKEN}" \
+  -H "x-content-source-authorization: Bearer ${IMS_TOKEN}" \
   "https://admin.hlx.page/preview/${ORG}/${SITE}/${BRANCH}${PATH}"
 ```
 

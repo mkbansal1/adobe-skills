@@ -19,6 +19,13 @@ Deploy code changes from GitHub to Edge Delivery Services.
 
 **Note:** Code operations use `{owner}/{repo}` (GitHub), not `{org}/{site}` (content).
 
+## Auth
+
+All code bus operations (GET and POST) require IMS Bearer — admin JWT is not accepted:
+```
+authorization: Bearer ${IMS_TOKEN}
+```
+
 ## Operations
 
 ### Sync Full Repository
@@ -27,8 +34,8 @@ Deploy code changes from GitHub to Edge Delivery Services.
 
 ```bash
 curl -s -X POST \
-  -H "x-auth-token: ${AUTH_TOKEN}" \
-  "https://admin.hlx.page/code/${CODE_OWNER}/${CODE_REPO}/${REF}"
+  -H "authorization: Bearer ${IMS_TOKEN}" \
+  "https://admin.hlx.page/code/${CODE_OWNER}/${CODE_REPO}/${REF}/*"
 ```
 
 **Success:** `Code synced for {owner}/{repo}`
@@ -37,14 +44,14 @@ curl -s -X POST \
 
 ```bash
 curl -s -X POST \
-  -H "x-auth-token: ${AUTH_TOKEN}" \
+  -H "authorization: Bearer ${IMS_TOKEN}" \
   "https://admin.hlx.page/code/${CODE_OWNER}/${CODE_REPO}/${REF}${PATH}"
 ```
 
 Example: Sync just the hero block:
 ```bash
 curl -s -X POST \
-  -H "x-auth-token: ${AUTH_TOKEN}" \
+  -H "authorization: Bearer ${IMS_TOKEN}" \
   "https://admin.hlx.page/code/${CODE_OWNER}/${CODE_REPO}/main/blocks/hero/hero.js"
 ```
 
@@ -52,7 +59,7 @@ curl -s -X POST \
 
 ```bash
 curl -s \
-  -H "x-auth-token: ${AUTH_TOKEN}" \
+  -H "authorization: Bearer ${IMS_TOKEN}" \
   "https://admin.hlx.page/code/${CODE_OWNER}/${CODE_REPO}/${REF}${PATH}"
 ```
 
@@ -66,7 +73,7 @@ Confirm: "This will delete {path} from the code bus. In repoless setups, this af
 
 ```bash
 curl -s -X DELETE \
-  -H "x-auth-token: ${AUTH_TOKEN}" \
+  -H "authorization: Bearer ${IMS_TOKEN}" \
   "https://admin.hlx.page/code/${CODE_OWNER}/${CODE_REPO}/${REF}${PATH}"
 ```
 

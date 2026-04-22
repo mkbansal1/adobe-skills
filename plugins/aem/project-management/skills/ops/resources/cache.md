@@ -15,13 +15,22 @@ Purge CDN cache for Edge Delivery Services content.
 | clear cache | `/cache/{org}/{site}/{ref}/{path}` | POST |
 | force clear | `/cache/{org}/{site}/{ref}/{path}?forceUpdate=true` | POST |
 
+## Auth
+
+All cache operations require:
+```
+authorization: Bearer ${IMS_TOKEN}
+x-content-source-authorization: Bearer ${IMS_TOKEN}
+```
+
 ## Operations
 
 ### Purge Cache
 
 ```bash
 curl -s -X POST \
-  -H "x-auth-token: ${AUTH_TOKEN}" \
+  -H "authorization: Bearer ${IMS_TOKEN}" \
+  -H "x-content-source-authorization: Bearer ${IMS_TOKEN}" \
   "https://admin.hlx.page/cache/${ORG}/${SITE}/${REF}${PATH}"
 ```
 
@@ -33,7 +42,8 @@ Bypasses edge cache entirely:
 
 ```bash
 curl -s -X POST \
-  -H "x-auth-token: ${AUTH_TOKEN}" \
+  -H "authorization: Bearer ${IMS_TOKEN}" \
+  -H "x-content-source-authorization: Bearer ${IMS_TOKEN}" \
   "https://admin.hlx.page/cache/${ORG}/${SITE}/${REF}${PATH}?forceUpdate=true"
 ```
 
@@ -47,7 +57,8 @@ Before executing, confirm: "This will invalidate ALL cached content for the site
 
 ```bash
 curl -s -X POST \
-  -H "x-auth-token: ${AUTH_TOKEN}" \
+  -H "authorization: Bearer ${IMS_TOKEN}" \
+  -H "x-content-source-authorization: Bearer ${IMS_TOKEN}" \
   "https://admin.hlx.page/cache/${ORG}/${SITE}/${REF}/*"
 ```
 

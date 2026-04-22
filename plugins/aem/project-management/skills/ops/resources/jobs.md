@@ -32,17 +32,17 @@ Track and manage bulk operation jobs for Edge Delivery Services.
 ```bash
 # List preview jobs
 curl -s \
-  -H "x-auth-token: ${AUTH_TOKEN}" \
+  -H "authorization: token ${AUTH_TOKEN}" \
   "https://admin.hlx.page/job/${ORG}/${SITE}/${REF}/preview"
 
 # List publish jobs
 curl -s \
-  -H "x-auth-token: ${AUTH_TOKEN}" \
+  -H "authorization: token ${AUTH_TOKEN}" \
   "https://admin.hlx.page/job/${ORG}/${SITE}/${REF}/live"
 
 # List index jobs
 curl -s \
-  -H "x-auth-token: ${AUTH_TOKEN}" \
+  -H "authorization: token ${AUTH_TOKEN}" \
   "https://admin.hlx.page/job/${ORG}/${SITE}/${REF}/index"
 ```
 
@@ -50,7 +50,7 @@ curl -s \
 
 ```bash
 curl -s \
-  -H "x-auth-token: ${AUTH_TOKEN}" \
+  -H "authorization: token ${AUTH_TOKEN}" \
   "https://admin.hlx.page/job/${ORG}/${SITE}/${REF}/${TOPIC}/${JOB_NAME}"
 ```
 
@@ -60,7 +60,7 @@ Returns job progress: total, completed, failed, pending.
 
 ```bash
 curl -s \
-  -H "x-auth-token: ${AUTH_TOKEN}" \
+  -H "authorization: token ${AUTH_TOKEN}" \
   "https://admin.hlx.page/job/${ORG}/${SITE}/${REF}/${TOPIC}/${JOB_NAME}/details"
 ```
 
@@ -70,7 +70,7 @@ Returns per-path status within the job.
 
 ```bash
 curl -s -X DELETE \
-  -H "x-auth-token: ${AUTH_TOKEN}" \
+  -H "authorization: token ${AUTH_TOKEN}" \
   "https://admin.hlx.page/job/${ORG}/${SITE}/${REF}/${TOPIC}/${JOB_NAME}"
 ```
 
