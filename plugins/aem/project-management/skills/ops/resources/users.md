@@ -21,7 +21,7 @@ Manage user access for Edge Delivery Services sites.
 ### Org-Level Users
 | Intent | Endpoint | Method |
 |--------|----------|--------|
-| list org users | `/config/{org}/users` | GET |
+| list org users | `/config/{org}.json` → `users[]` | GET |
 | add org user | `/config/{org}/users` | POST |
 | get org user | `/config/{org}/users/{userId}` | GET |
 | remove org user | `/config/{org}/users/{userId}` | DELETE |
@@ -42,11 +42,32 @@ Manage user access for Edge Delivery Services sites.
 
 ### List Users
 
+Try the site-level access endpoint first. If it returns 404, the org manages users centrally in the org config.
+
 ```bash
-curl -s \
+# Primary: site-level access
+HTTP=$(curl -s -w "%{http_code}" -o /tmp/access.json \
   -H "x-auth-token: ${AUTH_TOKEN}" \
-  "https://admin.hlx.page/config/${ORG}/sites/${SITE}/access.json"
+  "https://admin.hlx.page/config/${ORG}/sites/${SITE}/access.json")
+
+if [ "$HTTP" = "200" ]; then
+  cat /tmp/access.json
+else
+  # Fallback: users embedded in org config
+  echo "Site-level access.json returned $HTTP — reading from org config..."
+  curl -s \
+    -H "x-auth-token: ${AUTH_TOKEN}" \
+    "https://admin.hlx.page/config/${ORG}.json" | node -e "
+const d = JSON.parse(require('fs').readFileSync(0,'utf8'));
+const users = d.users || [];
+const admins  = users.filter(u => u.roles.includes('admin')).map(u => u.email);
+const authors = users.filter(u => u.roles.includes('author')).map(u => u.email);
+console.log(JSON.stringify({ admin: admins, author: authors }, null, 2));
+"
+fi
 ```
+
+**Note:** Orgs that manage access via org config (common in repoless setups) return 404 on the site access endpoint. The fallback reads `users[]` from `GET /config/{org}.json`.
 
 Returns:
 ```json
@@ -165,10 +186,17 @@ curl -s \
 
 ### List Org Users
 
+Org-level users are embedded in the org config under the `users[]` array. The dedicated `/config/{org}/users` endpoint returns 400 — use the org config endpoint instead.
+
 ```bash
 curl -s \
   -H "x-auth-token: ${AUTH_TOKEN}" \
-  "https://admin.hlx.page/config/${ORG}/users"
+  "https://admin.hlx.page/config/${ORG}.json" | node -e "
+const d = JSON.parse(require('fs').readFileSync(0,'utf8'));
+const users = d.users || [];
+console.log('Org users (' + users.length + '):');
+users.forEach(u => console.log(' ' + u.roles.join(',') + '\t' + u.email));
+"
 ```
 
 **▶ Recommended Next Actions:**

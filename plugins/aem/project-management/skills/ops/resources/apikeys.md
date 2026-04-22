@@ -14,7 +14,7 @@ Manage API keys for programmatic access to Edge Delivery Services.
 
 | Intent | Endpoint | Method |
 |--------|----------|--------|
-| list org API keys | `/config/{org}/apikeys` | GET |
+| list org API keys | `/config/{org}.json` → `apiKeys{}` | GET |
 | create org API key | `/config/{org}/apikeys` | POST |
 | read org API key | `/config/{org}/apikeys/{keyId}` | GET |
 | revoke org API key | `/config/{org}/apikeys/{keyId}` | DELETE |
@@ -34,10 +34,25 @@ Manage API keys for programmatic access to Edge Delivery Services.
 
 **Requires Admin role.**
 
+Org API keys are embedded in the org config under the `apiKeys{}` map. The dedicated `/config/{org}/apikeys` endpoint returns 400 — use the org config endpoint instead.
+
 ```bash
 curl -s \
   -H "x-auth-token: ${AUTH_TOKEN}" \
-  "https://admin.hlx.page/config/${ORG}/apikeys"
+  "https://admin.hlx.page/config/${ORG}.json" | node -e "
+const d = JSON.parse(require('fs').readFileSync(0,'utf8'));
+const keys = d.apiKeys || {};
+const entries = Object.values(keys);
+console.log('Org API keys (' + entries.length + '):');
+entries.forEach(k => {
+  console.log('  • ' + k.description);
+  console.log('    ID:      ' + k.id);
+  console.log('    Roles:   ' + (k.roles || []).join(', '));
+  console.log('    Subject: ' + k.subject);
+  console.log('    Expires: ' + k.expiration);
+  console.log('');
+});
+"
 ```
 
 **▶ Recommended Next Actions:**

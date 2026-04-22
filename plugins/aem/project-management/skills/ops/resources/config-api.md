@@ -23,17 +23,17 @@ Read and manage organization and site configurations.
 
 | Intent | Endpoint | Method |
 |--------|----------|--------|
-| read site config | `/config/{org}/{site}.json` | GET |
-| update site config | `/config/{org}/{site}.json` | POST |
-| create site config | `/config/{org}/{site}.json` | PUT |
-| delete site config | `/config/{org}/{site}.json` | DELETE |
+| read site config | `/config/{org}/sites/{site}.json` | GET |
+| update site config | `/config/{org}/sites/{site}.json` | POST |
+| create site config | `/config/{org}/sites/{site}.json` | PUT |
+| delete site config | `/config/{org}/sites/{site}.json` | DELETE |
 
 ### Robots.txt
 
 | Intent | Endpoint | Method |
 |--------|----------|--------|
-| read robots.txt | `/config/{org}/{site}.json/robots.txt` | GET |
-| update robots.txt | `/config/{org}/{site}.json/robots.txt` | POST |
+| read robots.txt | `/config/{org}/sites/{site}/robots.txt` | GET |
+| update robots.txt | `/config/{org}/sites/{site}/robots.txt` | POST |
 
 ## Operations
 
@@ -131,7 +131,7 @@ curl -s -X DELETE \
 ```bash
 curl -s \
   -H "x-auth-token: ${AUTH_TOKEN}" \
-  "https://admin.hlx.page/config/${ORG}/${SITE}.json"
+  "https://admin.hlx.page/config/${ORG}/sites/${SITE}.json"
 ```
 
 **▶ Recommended Next Actions:**
@@ -153,7 +153,7 @@ curl -s -X POST \
   -H "x-auth-token: ${AUTH_TOKEN}" \
   -H "Content-Type: application/json" \
   -d '{"property": "value"}' \
-  "https://admin.hlx.page/config/${ORG}/${SITE}.json"
+  "https://admin.hlx.page/config/${ORG}/sites/${SITE}.json"
 ```
 
 **▶ Recommended Next Actions:**
@@ -175,7 +175,7 @@ curl -s -X PUT \
   -H "x-auth-token: ${AUTH_TOKEN}" \
   -H "Content-Type: application/json" \
   -d '{"property": "value"}' \
-  "https://admin.hlx.page/config/${ORG}/${SITE}.json"
+  "https://admin.hlx.page/config/${ORG}/sites/${SITE}.json"
 ```
 
 **▶ Recommended Next Actions:**
@@ -202,7 +202,7 @@ Before executing, you MUST:
 ```bash
 curl -s -X DELETE \
   -H "x-auth-token: ${AUTH_TOKEN}" \
-  "https://admin.hlx.page/config/${ORG}/${SITE}.json"
+  "https://admin.hlx.page/config/${ORG}/sites/${SITE}.json"
 ```
 
 **▶ Recommended Next Actions:**
@@ -220,7 +220,7 @@ curl -s -X DELETE \
 ```bash
 curl -s \
   -H "x-auth-token: ${AUTH_TOKEN}" \
-  "https://admin.hlx.page/config/${ORG}/${SITE}.json/robots.txt"
+  "https://admin.hlx.page/config/${ORG}/sites/${SITE}/robots.txt"
 ```
 
 **▶ Recommended Next Actions:**
@@ -244,7 +244,7 @@ curl -s -X POST \
   -d 'User-agent: *
 Disallow: /private/
 Allow: /' \
-  "https://admin.hlx.page/config/${ORG}/${SITE}.json/robots.txt"
+  "https://admin.hlx.page/config/${ORG}/sites/${SITE}/robots.txt"
 ```
 
 **▶ Recommended Next Actions:**
