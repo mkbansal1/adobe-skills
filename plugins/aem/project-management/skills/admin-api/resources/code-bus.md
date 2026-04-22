@@ -11,7 +11,7 @@ Sync and inspect code deployments via the Admin API code bus. Use after pushing 
 
 ## Auth
 
-IMS Bearer token only — GitHub PATs are **not** accepted by admin.hlx.page.
+IMS Bearer token only — GitHub PATs and admin JWT (`authorization: token`) are **not** accepted by admin.hlx.page for any code bus operation (GET or POST).
 ```
 authorization: Bearer ${IMS_TOKEN}
 ```
