@@ -8,6 +8,14 @@ allowed-tools: Read, Write, Edit, Bash
 
 Generate sitemap files for Edge Delivery Services sites.
 
+## When to Use
+
+- Initial site launch — generating the first sitemap.xml for search engine submission
+- After a large batch of pages was published and the sitemap needs to reflect new content
+- Sitemap is missing pages or contains stale URLs and needs a full regeneration
+- Generating a custom sitemap at a non-default path (e.g., `/en/sitemap.xml`)
+- After updating sitemap configuration rules and needing to apply them immediately
+
 ## API Reference
 
 | Intent | Endpoint | Method |

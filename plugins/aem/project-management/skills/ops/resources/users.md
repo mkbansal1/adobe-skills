@@ -8,6 +8,14 @@ allowed-tools: Read, Write, Edit, Bash
 
 Manage user access for Edge Delivery Services sites.
 
+## When to Use
+
+- Granting a new team member admin or author access to a site
+- Revoking access for a user who has left the team or changed role
+- Auditing who currently has access before a security review
+- Checking your own profile and permissions (`who am i`)
+- Managing users at the org level when the site uses a centralized (repoless) access model
+
 ## API Reference
 
 ### Site-Level Access

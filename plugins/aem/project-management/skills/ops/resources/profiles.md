@@ -8,6 +8,14 @@ allowed-tools: Read, Write, Edit, Bash
 
 Manage user profile-level configuration settings.
 
+## When to Use
+
+- Configuring site-specific CDN rules, response headers, or access controls for a named profile
+- Reading the current profile settings before making changes
+- Creating a new profile for a distinct audience or environment (e.g., `default`, `authenticated`)
+- Updating header rules or metadata overrides that apply to a specific user segment
+- Deleting an obsolete profile that is no longer in use
+
 ## API Reference
 
 | Intent | Endpoint | Method |

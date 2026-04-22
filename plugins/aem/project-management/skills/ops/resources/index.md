@@ -8,6 +8,14 @@ allowed-tools: Read, Write, Edit, Bash
 
 Manage search index for Edge Delivery Services content.
 
+## When to Use
+
+- Page was published but search results are not reflecting the latest content
+- New pages need to be made searchable immediately without waiting for scheduled indexing
+- A page was deleted and its stale entry needs to be removed from the search index
+- Bulk re-indexing a section of the site after a structural content change
+- Diagnosing search relevance issues by forcing a fresh index of specific pages
+
 ## API Reference
 
 | Intent | Endpoint | Method |

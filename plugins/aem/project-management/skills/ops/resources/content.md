@@ -8,6 +8,15 @@ allowed-tools: Read, Write, Edit, Bash
 
 Preview, publish, unpublish, and status operations for Edge Delivery Services content.
 
+## When to Use
+
+- Author finished editing and content needs to appear on the preview CDN
+- Previewed page is ready to go live — promote to the live CDN
+- Page needs to be taken down from live (unpublish)
+- Bulk-promoting an entire site or subtree across preview or live
+- Diagnosing stale content — checking whether preview/live timestamps match the latest edit
+- Removing a deleted page from the preview or live CDN
+
 ## API Reference
 
 | Intent | Endpoint | Method |

@@ -8,6 +8,14 @@ allowed-tools: Read, Write, Edit, Bash
 
 Manage secrets for Edge Delivery Services at organization and site levels.
 
+## When to Use
+
+- Storing API keys, tokens, or credentials that edge workers or services need at runtime
+- Rotating a secret that has been exposed or is due for renewal
+- Auditing which secrets exist at org or site level before a security review
+- Removing secrets for decommissioned integrations or services
+- Setting up a new site integration that requires injecting credentials into the CDN layer
+
 ## API Reference
 
 ### Organization Secrets

@@ -8,6 +8,14 @@ allowed-tools: Read, Bash
 
 List all indexed pages for a site using the query-index.
 
+## When to Use
+
+- Getting a full inventory of all published pages on a site
+- Finding pages to target for bulk preview, publish, or cache operations
+- Auditing which pages are indexed and what metadata they expose
+- Checking that newly published pages have been picked up by the query index
+- Identifying missing or stale pages before a launch or audit
+
 ## Prerequisites
 
 - Site must have indexing configured (helix-query.yaml or default)

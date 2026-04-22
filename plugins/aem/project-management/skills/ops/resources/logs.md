@@ -8,6 +8,14 @@ allowed-tools: Read, Write, Edit, Bash
 
 View and manage audit logs for Edge Delivery Services.
 
+## When to Use
+
+- Investigating when a content change was made and by whom
+- Auditing preview and publish activity over a specific time window
+- Diagnosing unexpected content changes by reviewing recent operation history
+- Adding a manual log entry to mark a deployment, release, or significant event
+- Compliance review — retrieving a time-bounded record of all site operations
+
 ## API Reference
 
 | Intent | Endpoint | Method |

@@ -8,6 +8,14 @@ allowed-tools: Read, Write, Edit, Bash
 
 Deploy code changes from GitHub to Edge Delivery Services.
 
+## When to Use
+
+- Code change was merged to GitHub but the site is still serving the old version
+- Deploying a specific file fix without waiting for a full sync
+- Removing a deleted file from the code bus
+- Checking the deployed state of a specific file
+- **Repoless caution:** Code sync affects ALL sites sharing the repo — coordinate before syncing
+
 ## API Reference
 
 | Intent | Endpoint | Method |

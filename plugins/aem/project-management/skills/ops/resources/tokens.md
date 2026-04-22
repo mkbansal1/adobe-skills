@@ -8,6 +8,14 @@ allowed-tools: Read, Write, Edit, Bash
 
 Manage access tokens for Edge Delivery Services sites.
 
+## When to Use
+
+- Generating a site-scoped token for an external service or CI/CD pipeline to access content operations
+- Auditing active tokens to identify unused or over-privileged credentials
+- Revoking a token that was exposed, is no longer needed, or belongs to a departing team member
+- Rotating tokens as part of periodic credential hygiene
+- Troubleshooting API access failures by verifying which tokens are currently active
+
 ## API Reference
 
 | Intent | Endpoint | Method |

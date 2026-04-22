@@ -8,6 +8,14 @@ allowed-tools: Read, Write, Edit, Bash
 
 Manage configuration version history and rollback.
 
+## When to Use
+
+- A configuration change broke the site and you need to roll back to a known-good state
+- Reviewing the history of config changes to diagnose when an issue was introduced
+- Auditing who changed what and when in org-level configuration
+- Restoring a previous configuration after an accidental or incorrect update
+- Cleaning up obsolete version entries to maintain a tidy history
+
 ## API Reference
 
 | Intent | Endpoint | Method |

@@ -8,6 +8,14 @@ allowed-tools: Read, Write, Edit, Bash
 
 Track and manage bulk operation jobs for Edge Delivery Services.
 
+## When to Use
+
+- A bulk preview or publish was triggered and you need to check its progress
+- A job appears to be stuck or taking longer than expected
+- Cancelling a bulk operation that was started by mistake
+- Auditing recent bulk operations (preview/publish/index) and their outcomes
+- Diagnosing why some pages were not included in a bulk operation result
+
 ## API Reference
 
 | Intent | Endpoint | Method |

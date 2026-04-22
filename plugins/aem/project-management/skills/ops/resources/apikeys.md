@@ -8,6 +8,14 @@ allowed-tools: Read, Write, Edit, Bash
 
 Manage API keys for programmatic access to Edge Delivery Services.
 
+## When to Use
+
+- Generating an API key for a CI/CD pipeline, automation, or external service
+- Auditing active API keys at org or site level before a security review
+- Revoking a key that was exposed, is unused, or belongs to a decommissioned service
+- Rotating API keys as part of periodic credential hygiene
+- Investigating API access failures by verifying which keys are currently active and their scopes
+
 ## API Reference
 
 ### Organization API Keys

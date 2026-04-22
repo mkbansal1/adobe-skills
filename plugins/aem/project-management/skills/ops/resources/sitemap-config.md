@@ -8,6 +8,14 @@ allowed-tools: Read, Write, Edit, Bash
 
 Manage sitemap configuration (helix-sitemap.yaml) that defines sitemap generation rules.
 
+## When to Use
+
+- Adding new URL patterns or path prefixes to the sitemap
+- Excluding paths from crawler discovery (e.g., staging, draft sections)
+- Adjusting change frequency or priority values for SEO
+- Reviewing the current sitemap rules before a site launch
+- Diagnosing missing pages in a generated sitemap
+
 ## API Reference
 
 | Intent | Endpoint | Method |

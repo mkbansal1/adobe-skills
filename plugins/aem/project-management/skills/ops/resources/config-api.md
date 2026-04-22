@@ -8,6 +8,14 @@ allowed-tools: Read, Write, Edit, Bash
 
 Read and manage organization and site configurations.
 
+## When to Use
+
+- Reading org or site configuration to audit current settings before making changes
+- Updating site-level config properties (e.g., CDN rules, redirects, header overrides)
+- Creating a brand-new org or site configuration for a fresh onboarding
+- Deleting a site or org config as part of decommissioning (destructive — requires confirmation)
+- Reading or updating `robots.txt` to control crawler access rules
+
 ## API Reference
 
 ### Organization Config

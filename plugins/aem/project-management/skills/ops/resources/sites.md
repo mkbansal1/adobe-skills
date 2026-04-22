@@ -8,6 +8,14 @@ allowed-tools: Read, Write, Edit, Bash
 
 Manage multi-site (repoless) setups and branch operations.
 
+## When to Use
+
+- Working in a repoless org with multiple sites and need to switch the active site context
+- Listing all sites under an org to find the correct site name before running operations
+- Switching to a feature branch to preview or test branch-specific content
+- Investigating which sites share a code repo before triggering a code sync
+- Setting up the project config for a new site or brand under an existing org
+
 ## Repoless Architecture
 
 In a **repoless setup**, multiple sites share a single code repository:

@@ -8,6 +8,15 @@ allowed-tools: Read, Write, Edit, Bash
 
 Purge CDN cache for Edge Delivery Services content.
 
+## When to Use
+
+- Page was published but the live URL still shows old content after 60 seconds
+- Emergency fix needs to reach users immediately after publish
+- CDN is serving a stale version despite a successful publish
+- Bulk cache purge required after deploying a new code version that changes rendering
+
+**Note:** Cache purge does NOT republish — it only clears what the CDN has cached. If page content is wrong, run Publish first, then purge.
+
 ## API Reference
 
 | Intent | Endpoint | Method |

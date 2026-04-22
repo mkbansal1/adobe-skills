@@ -8,6 +8,14 @@ allowed-tools: Read, Write, Edit, Bash, Skill
 
 Shared configuration loading and setup for all ops operations.
 
+## When to Use
+
+- **Always loaded first** by every ops resource skill before executing any operation
+- Extracting org, site, ref, and auth token from `.claude-plugin/project-config.json`
+- Parsing org/site/ref/path from a user-supplied AEM URL (`*.aem.page` / `*.aem.live`)
+- Saving a new org or site name when the project config is missing or incomplete
+- Triggering re-authentication when the stored auth token is expired or absent
+
 ## Load Configuration
 
 ```bash

@@ -8,6 +8,14 @@ allowed-tools: Read, Write, Edit, Bash
 
 Manage search index configuration (helix-index.yaml) that defines indexing rules.
 
+## When to Use
+
+- Adding new metadata fields to the search index (e.g., category, author, date)
+- Removing fields that are no longer needed from the index schema
+- Troubleshooting missing or incorrect data in search query results
+- Onboarding a new content type that requires custom indexing rules
+- Reviewing the current index configuration before making schema changes
+
 ## API Reference
 
 | Intent | Endpoint | Method |

@@ -8,6 +8,14 @@ allowed-tools: Read, Write, Edit, Bash
 
 Bundle multiple content changes for coordinated publishing.
 
+## When to Use
+
+- Coordinating a launch where multiple pages must go live at the same time
+- Gating a content release behind a review and approval workflow before publishing
+- Grouping related content changes (e.g., campaign, product launch) into a named bundle
+- Rolling back a release by identifying and unpublishing the pages in a specific snapshot
+- Staging content for a scheduled release while keeping the live site unchanged
+
 ## API Reference
 
 | Intent | Endpoint | Method |
