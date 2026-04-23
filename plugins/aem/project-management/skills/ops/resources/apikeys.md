@@ -145,6 +145,8 @@ curl -s \
   "https://admin.hlx.page/config/${ORG}/${SITE}/apikeys"
 ```
 
+**On success:** Display results in a table with columns **ID**, **Description**, **Roles**, **Subject**, and **Expiration**. Report total count.
+
 **▶ Recommended Next Actions:**
 1. Create a new site-level API key for a service or pipeline
    ```

@@ -37,6 +37,8 @@ curl -s \
   "https://admin.hlx.page/config/${ORG}/${SITE}/tokens"
 ```
 
+**On success:** Display results in a table with columns **ID**, **Name**, **Scopes**, and **Expiration**. Report total count.
+
 **▶ Recommended Next Actions:**
 1. Create a new token for a service or pipeline
    ```

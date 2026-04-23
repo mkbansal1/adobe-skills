@@ -91,6 +91,8 @@ curl -s -X POST \
   "https://admin.hlx.page/cache/${ORG}/${SITE}/${REF}/*"
 ```
 
+**Success:** `All cached content invalidated for {site}. CDN propagation takes 10–15 seconds.`
+
 **▶ Recommended Next Actions:**
 1. Hard-refresh your browser — `Cmd+Shift+R` (Mac) / `Ctrl+Shift+R` (Windows)
 2. Allow 10–15 seconds before checking — full site purge takes longer to propagate than single-path purge

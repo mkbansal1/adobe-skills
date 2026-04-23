@@ -35,7 +35,7 @@ curl -s \
   "https://admin.hlx.page/log/${ORG}/${SITE}/${REF}"
 ```
 
-**Success:** `Showing {count} log entries from last 7 days`
+**On success:** Display results in a table with columns **Timestamp**, **Operation**, **Path**, and **User**. Report total count and the date range covered.
 **▶ Recommended Next Actions:**
 1. Narrow results to recent activity only
    ```
@@ -65,6 +65,8 @@ curl -s \
   "https://admin.hlx.page/log/${ORG}/${SITE}/${REF}?since=3d"
 ```
 
+**On success:** Display results in a table with columns **Timestamp**, **Operation**, **Path**, and **User**. Report total count and the filter window applied.
+
 **▶ Recommended Next Actions:**
 1. Check the publish status of a path that appears in the logs
    ```
@@ -82,6 +84,8 @@ curl -s \
   -H "x-auth-token: ${AUTH_TOKEN}" \
   "https://admin.hlx.page/log/${ORG}/${SITE}/${REF}?from=2024-01-01T00:00:00Z&to=2024-01-02T00:00:00Z"
 ```
+
+**On success:** Display results in a table with columns **Timestamp**, **Operation**, **Path**, and **User**. Report total count and the exact time range covered.
 
 **▶ Recommended Next Actions:**
 1. Check publish status of a path that appeared in the time range

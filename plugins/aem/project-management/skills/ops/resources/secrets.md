@@ -42,11 +42,15 @@ Manage secrets for Edge Delivery Services at organization and site levels.
 
 **Requires Admin role.**
 
+Org secrets are embedded in the org config under the `secrets{}` map. The dedicated `/config/{org}/secrets` endpoint returns 400 — use the org config endpoint instead.
+
 ```bash
 curl -s \
   -H "x-auth-token: ${AUTH_TOKEN}" \
-  "https://admin.hlx.page/config/${ORG}/secrets"
+  "https://admin.hlx.page/config/${ORG}.json"
 ```
+
+**On success:** Extract `secrets{}` map — display results in a table with columns **Name** and **ID**. Note: secret values are never returned by the API. Report total count. If the `secrets` key is absent or empty, inform the user that no org-level secrets are configured.
 
 **▶ Recommended Next Actions:**
 1. Create a new org-level secret for a shared integration
@@ -138,6 +142,8 @@ curl -s \
   -H "x-auth-token: ${AUTH_TOKEN}" \
   "https://admin.hlx.page/config/${ORG}/${SITE}/secrets"
 ```
+
+**On success:** Display results in a table with columns **Name** and **ID**. Note: secret values are never returned by the API. Report total count.
 
 **▶ Recommended Next Actions:**
 1. Create a new site-level secret for an integration

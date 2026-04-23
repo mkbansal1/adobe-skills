@@ -87,6 +87,14 @@ curl -s \
   "https://admin.hlx.page/index/${ORG}/${SITE}/${REF}${PATH}"
 ```
 
+**On success (200):** Display a status summary:
+
+| Field | Value |
+|-------|-------|
+| **Path** | `{path}` |
+| **Indexed** | `{indexed}` (true / false) |
+| **Last Modified** | `{lastModified}` |
+
 **▶ Recommended Next Actions:**
 1. If page is not indexed, trigger a reindex
    ```

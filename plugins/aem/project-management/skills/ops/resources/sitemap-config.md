@@ -33,6 +33,8 @@ curl -s \
   "https://admin.hlx.page/config/${ORG}/${SITE}/helix-sitemap.yaml"
 ```
 
+**On success (200):** Display the full helix-sitemap.yaml content in a code block.
+
 **▶ Recommended Next Actions:**
 1. Update the sitemap configuration if rules need to change
    ```

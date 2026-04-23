@@ -81,14 +81,14 @@ Type 'help' for the full command list.
 
 Analyze user request and load the appropriate resource module.
 
-### Step 0: Get Organization Name (REQUIRED FIRST)
+### Step 0: Load Full Configuration
 
-**Before ANY operation**, check if org name exists in saved config:
+Read `resources/config.md`:
+- **"Load Configuration"** section — loads `ORG`, `AUTH_TOKEN`, `IMS_TOKEN`, `SITE`, `REF`, `CODE_OWNER`, `CODE_REPO` from saved config
+- **"Parse from AEM URL"** section — if the user's request contains an `*.aem.page` or `*.aem.live` URL, parse `REF`, `SITE`, `ORG`, `PATH` from it (overrides saved config values)
+- **"Setup If Missing"** section — if any required value is still empty after loading
 
-```bash
-ORG=$(cat .claude-plugin/project-config.json 2>/dev/null | grep -o '"org"[[:space:]]*:[[:space:]]*"[^"]*"' | sed 's/"org"[[:space:]]*:[[:space:]]*"//' | sed 's/"$//')
-echo "org=${ORG:-NOT SET}"
-```
+**After loading, check prerequisites:**
 
 **If `ORG` is empty**, you MUST pause and ask the user:
 
@@ -108,15 +108,6 @@ echo "org=${ORG:-NOT SET}"
 
 **Do NOT proceed until org is confirmed.**
 
-### Step 1: Authenticate (REQUIRED)
-
-**Before ANY API call**, check if auth token exists:
-
-```bash
-AUTH_TOKEN=$(cat .claude-plugin/project-config.json 2>/dev/null | grep -o '"authToken"[[:space:]]*:[[:space:]]*"[^"]*"' | sed 's/"authToken"[[:space:]]*:[[:space:]]*"//' | sed 's/"$//')
-echo "auth=${AUTH_TOKEN:+set}"
-```
-
 **If `AUTH_TOKEN` is empty or missing**, you MUST invoke the auth skill BEFORE proceeding:
 
 ```
@@ -126,13 +117,6 @@ Skill({ skill: "project-management:auth" })
 This opens a browser via Playwright for Adobe ID login and saves the token to `.claude-plugin/project-config.json`.
 
 **IMPORTANT:** Do NOT skip this step. Do NOT attempt any API calls without a valid auth token. The auth skill handles the entire authentication flow.
-
-**After loading `AUTH_TOKEN`, load the IMS Bearer token** (required for preview, publish, unpublish, cache, and code operations):
-
-```bash
-IMS_TOKEN=$(cat .claude-plugin/project-config.json 2>/dev/null | grep -o '"imsToken"[[:space:]]*:[[:space:]]*"[^"]*"' | sed 's/"imsToken"[[:space:]]*:[[:space:]]*"//' | sed 's/"$//')
-echo "IMS_TOKEN=${IMS_TOKEN:+set}"
-```
 
 **If `IMS_TOKEN` is empty** and the operation requires it (preview, publish, unpublish, cache, code):
 > "I need an Adobe IMS Bearer token to perform this operation. Please open DevTools on any DA or AEM page → Network tab → copy the `authorization: Bearer eyJ...` value from any request and share it here."
@@ -144,14 +128,7 @@ echo "IMS_TOKEN=${IMS_TOKEN:+set}"
 | `AUTH_TOKEN` (admin JWT) | `authorization: token ${AUTH_TOKEN}` | Status checks, job queries, index reads |
 | `IMS_TOKEN` (IMS Bearer) | `authorization: Bearer ${IMS_TOKEN}` + `x-content-source-authorization: Bearer ${IMS_TOKEN}` | Preview, publish, unpublish, cache, code sync |
 
-### Step 2: Load Full Configuration
-
-Read `resources/config.md`:
-- **"Load Configuration"** section — loads `ORG`, `AUTH_TOKEN`, `IMS_TOKEN`, `SITE`, `REF`, `CODE_OWNER`, `CODE_REPO` from saved config
-- **"Parse from AEM URL"** section — if the user's request contains an `*.aem.page` or `*.aem.live` URL, parse `REF`, `SITE`, `ORG`, `PATH` from it (overrides saved config values)
-- **"Setup If Missing"** section — if any required value is still empty after loading
-
-### Step 3: Route by Intent
+### Step 1: Route by Intent
 
 | User Intent | Resource Module |
 |-------------|-----------------|

@@ -54,6 +54,8 @@ curl -s \
   "https://admin.hlx.page/job/${ORG}/${SITE}/${REF}/index"
 ```
 
+**On success:** Display results in a table with columns **Job Name**, **Topic**, **State**, **Processed**, **Total**, and **Started**. Report total count per topic.
+
 **▶ Recommended Next Actions:**
 1. Check progress of a specific job
    ```
@@ -76,7 +78,14 @@ curl -s \
   "https://admin.hlx.page/job/${ORG}/${SITE}/${REF}/${TOPIC}/${JOB_NAME}"
 ```
 
-Returns job progress: total, completed, failed, pending.
+**On success (200):** Display a status summary:
+
+| Field | Value |
+|-------|-------|
+| **Job Name** | `{job.name}` |
+| **State** | `{job.state}` (created / running / stopped) |
+| **Processed** | `{job.progress.processed}` / `{job.progress.total}` |
+| **Failed** | `{job.progress.failed}` |
 
 | Field | Meaning |
 |-------|---------|
@@ -107,7 +116,7 @@ curl -s \
   "https://admin.hlx.page/job/${ORG}/${SITE}/${REF}/${TOPIC}/${JOB_NAME}/details"
 ```
 
-Returns per-path status within the job.
+**On success (200):** Display results in a table with columns **Path**, **Status**, and **Error** (if any). Summarise: total paths, succeeded count, failed count. Highlight any failed paths.
 
 **▶ Recommended Next Actions:**
 1. If individual paths failed, retry them separately

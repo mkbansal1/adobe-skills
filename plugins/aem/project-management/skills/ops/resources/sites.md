@@ -40,7 +40,7 @@ curl -s \
   "https://admin.hlx.page/config/${ORG}/sites.json"
 ```
 
-**On success:** Extract `sites[].name` — display each as `{name} → https://main--{name}--{org}.aem.page`.
+**On success:** Extract `sites[].name` — display results in a table with columns **#**, **Site Name**, and **Preview URL** (`https://main--{name}--{org}.aem.page`). Report total count.
 
 **▶ Recommended Next Actions:**
 1. Switch to a specific site to operate on it

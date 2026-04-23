@@ -44,6 +44,8 @@ curl -s \
   "https://admin.hlx.page/snapshot/${ORG}/${SITE}/main"
 ```
 
+**On success:** Display results in a table with columns **ID**, **Title**, **Status**, and **Created**. Report total count.
+
 **▶ Recommended Next Actions:**
 1. View the contents of a specific snapshot
    ```
@@ -82,6 +84,8 @@ curl -s \
   -H "x-auth-token: ${AUTH_TOKEN}" \
   "https://admin.hlx.page/snapshot/${ORG}/${SITE}/main/${SNAPSHOT_ID}"
 ```
+
+**On success:** Show snapshot metadata (ID, title, status, created date), then display the resource list in a table with columns **#**, **Path**, and **Status**. Report total resource count.
 
 **▶ Recommended Next Actions:**
 1. Publish the snapshot when all pages are ready

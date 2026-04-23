@@ -68,8 +68,9 @@ else
     "https://admin.hlx.page/config/${ORG}.json"
 fi
 
-# On success: extract users[] array — group by role (admin / author) and display email list.
 ```
+
+**On success:** Display results in a table with columns **Email** and **Roles**, grouped by role (admins first, then authors). Report total count per role.
 
 **Note:** Orgs that manage access via org config (common in repoless setups) return 404 on the site access endpoint. The fallback reads `users[]` from `GET /config/{org}.json`.
 
@@ -198,7 +199,7 @@ curl -s \
   "https://admin.hlx.page/config/${ORG}.json"
 ```
 
-**On success:** Extract `users[]` array — display each user's `email` and `roles`. Report total count.
+**On success:** Display results in a table with columns **Email**, **Roles**, and **ID**. Report total count.
 
 **▶ Recommended Next Actions:**
 1. Add a new user to the organization
