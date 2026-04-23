@@ -65,14 +65,10 @@ else
   echo "Site-level access.json returned $HTTP — reading from org config..."
   curl -s \
     -H "x-auth-token: ${AUTH_TOKEN}" \
-    "https://admin.hlx.page/config/${ORG}.json" | node -e "
-const d = JSON.parse(require('fs').readFileSync(0,'utf8'));
-const users = d.users || [];
-const admins  = users.filter(u => u.roles.includes('admin')).map(u => u.email);
-const authors = users.filter(u => u.roles.includes('author')).map(u => u.email);
-console.log(JSON.stringify({ admin: admins, author: authors }, null, 2));
-"
+    "https://admin.hlx.page/config/${ORG}.json"
 fi
+
+# On success: extract users[] array — group by role (admin / author) and display email list.
 ```
 
 **Note:** Orgs that manage access via org config (common in repoless setups) return 404 on the site access endpoint. The fallback reads `users[]` from `GET /config/{org}.json`.
@@ -199,13 +195,10 @@ Org-level users are embedded in the org config under the `users[]` array. The de
 ```bash
 curl -s \
   -H "x-auth-token: ${AUTH_TOKEN}" \
-  "https://admin.hlx.page/config/${ORG}.json" | node -e "
-const d = JSON.parse(require('fs').readFileSync(0,'utf8'));
-const users = d.users || [];
-console.log('Org users (' + users.length + '):');
-users.forEach(u => console.log(' ' + u.roles.join(',') + '\t' + u.email));
-"
+  "https://admin.hlx.page/config/${ORG}.json"
 ```
+
+**On success:** Extract `users[]` array — display each user's `email` and `roles`. Report total count.
 
 **▶ Recommended Next Actions:**
 1. Add a new user to the organization

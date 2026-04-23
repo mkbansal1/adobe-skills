@@ -126,12 +126,13 @@ SITE_CONFIG=$(curl -s -H "x-auth-token: ${AUTH_TOKEN}" "https://admin.hlx.page/c
 CODE_OWNER=$(echo "$SITE_CONFIG" | grep -o '"owner"[[:space:]]*:[[:space:]]*"[^"]*"' | head -1 | sed 's/"owner"[[:space:]]*:[[:space:]]*"//' | sed 's/"$//')
 CODE_REPO=$(echo "$SITE_CONFIG" | grep -o '"repo"[[:space:]]*:[[:space:]]*"[^"]*"' | head -1 | sed 's/"repo"[[:space:]]*:[[:space:]]*"//' | sed 's/"$//')
 
-node -e "
-const fs = require('fs');
-const config = JSON.parse(fs.readFileSync('.claude-plugin/project-config.json', 'utf8'));
-config.codeOwner = '${CODE_OWNER}';
-config.codeRepo = '${CODE_REPO}';
-fs.writeFileSync('.claude-plugin/project-config.json', JSON.stringify(config, null, 2));
+python3 -c "
+import json
+with open('.claude-plugin/project-config.json') as f: c = json.load(f)
+c['codeOwner'] = '${CODE_OWNER}'
+c['codeRepo'] = '${CODE_REPO}'
+with open('.claude-plugin/project-config.json', 'w') as f: json.dump(c, f, indent=2)
+print('Saved: codeOwner=${CODE_OWNER} codeRepo=${CODE_REPO}')
 "
 ```
 

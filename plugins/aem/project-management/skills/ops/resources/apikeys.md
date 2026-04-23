@@ -47,21 +47,10 @@ Org API keys are embedded in the org config under the `apiKeys{}` map. The dedic
 ```bash
 curl -s \
   -H "x-auth-token: ${AUTH_TOKEN}" \
-  "https://admin.hlx.page/config/${ORG}.json" | node -e "
-const d = JSON.parse(require('fs').readFileSync(0,'utf8'));
-const keys = d.apiKeys || {};
-const entries = Object.values(keys);
-console.log('Org API keys (' + entries.length + '):');
-entries.forEach(k => {
-  console.log('  • ' + k.description);
-  console.log('    ID:      ' + k.id);
-  console.log('    Roles:   ' + (k.roles || []).join(', '));
-  console.log('    Subject: ' + k.subject);
-  console.log('    Expires: ' + k.expiration);
-  console.log('');
-});
-"
+  "https://admin.hlx.page/config/${ORG}.json"
 ```
+
+**On success:** Extract `apiKeys{}` map — display each key's `description`, `id`, `roles`, `subject`, and `expiration`. Report total count.
 
 **▶ Recommended Next Actions:**
 1. Create a new org-level API key for a service or pipeline

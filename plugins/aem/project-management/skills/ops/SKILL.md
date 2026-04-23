@@ -127,32 +127,14 @@ This opens a browser via Playwright for Adobe ID login and saves the token to `.
 
 **IMPORTANT:** Do NOT skip this step. Do NOT attempt any API calls without a valid auth token. The auth skill handles the entire authentication flow.
 
-**After loading `AUTH_TOKEN`, extract the IMS Bearer token** (required for preview, publish, unpublish, cache, and code operations):
+**After loading `AUTH_TOKEN`, load the IMS Bearer token** (required for preview, publish, unpublish, cache, and code operations):
 
 ```bash
 IMS_TOKEN=$(cat .claude-plugin/project-config.json 2>/dev/null | grep -o '"imsToken"[[:space:]]*:[[:space:]]*"[^"]*"' | sed 's/"imsToken"[[:space:]]*:[[:space:]]*"//' | sed 's/"$//')
-
-# If not saved, extract from JWT payload
-if [ -z "$IMS_TOKEN" ] && [ -n "$AUTH_TOKEN" ]; then
-  PAYLOAD=$(echo "$AUTH_TOKEN" | cut -d. -f2)
-  case $((${#PAYLOAD} % 4)) in
-    2) PAYLOAD="${PAYLOAD}==" ;;
-    3) PAYLOAD="${PAYLOAD}=" ;;
-  esac
-  IMS_TOKEN=$(python3 -c "
-import base64, re
-payload = base64.urlsafe_b64decode('${PAYLOAD}').decode('utf-8', errors='replace')
-match = re.search(r'\"imsToken\"\s*:\s*\"(eyJ[^\"]+)\"', payload)
-if match:
-    import re as re2
-    print(re2.sub(r'\s+', '', match.group(1)))
-" 2>/dev/null)
-fi
-
 echo "IMS_TOKEN=${IMS_TOKEN:+set}"
 ```
 
-**If `IMS_TOKEN` is still empty** and the operation requires it (preview, publish, unpublish, cache, code):
+**If `IMS_TOKEN` is empty** and the operation requires it (preview, publish, unpublish, cache, code):
 > "I need an Adobe IMS Bearer token to perform this operation. Please open DevTools on any DA or AEM page → Network tab → copy the `authorization: Bearer eyJ...` value from any request and share it here."
 
 **Two tokens, two purposes:**

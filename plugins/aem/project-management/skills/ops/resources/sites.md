@@ -35,12 +35,12 @@ Organization (org)
 ### List All Sites
 
 ```bash
-ORG=$(cat .claude-plugin/project-config.json | grep -o '"org"[[:space:]]*:[[:space:]]*"[^"]*"' | sed 's/"org"[[:space:]]*:[[:space:]]*"//' | sed 's/"$//')
-curl -s "https://admin.hlx.page/config/${ORG}/sites.json" | node -e "
-const data = JSON.parse(require('fs').readFileSync(0, 'utf8'));
-data.sites.forEach((s, i) => console.log(\`\${i + 1}. \${s.name} → https://main--\${s.name}--${ORG}.aem.page\`));
-"
+curl -s \
+  -H "x-auth-token: ${AUTH_TOKEN}" \
+  "https://admin.hlx.page/config/${ORG}/sites.json"
 ```
+
+**On success:** Extract `sites[].name` — display each as `{name} → https://main--{name}--{org}.aem.page`.
 
 **▶ Recommended Next Actions:**
 1. Switch to a specific site to operate on it
@@ -80,12 +80,12 @@ fi
 ### Switch Site
 
 ```bash
-node -e "
-const fs = require('fs');
-const config = JSON.parse(fs.readFileSync('.claude-plugin/project-config.json', 'utf8'));
-config.site = '${NEW_SITE}';
-fs.writeFileSync('.claude-plugin/project-config.json', JSON.stringify(config, null, 2));
-console.log('Switched to site: ${NEW_SITE}');
+python3 -c "
+import json
+with open('.claude-plugin/project-config.json') as f: c = json.load(f)
+c['site'] = '${NEW_SITE}'
+with open('.claude-plugin/project-config.json', 'w') as f: json.dump(c, f, indent=2)
+print('Switched to site: ${NEW_SITE}')
 "
 ```
 
@@ -103,13 +103,11 @@ console.log('Switched to site: ${NEW_SITE}');
 ### Switch Branch
 
 ```bash
-node -e "
-const fs = require('fs');
-const config = JSON.parse(fs.readFileSync('.claude-plugin/project-config.json', 'utf8'));
-config.ref = '${NEW_BRANCH}';
-fs.writeFileSync('.claude-plugin/project-config.json', JSON.stringify(config, null, 2));
-console.log('Switched to branch: ${NEW_BRANCH}');
-console.log('Preview URL: https://${NEW_BRANCH}--' + config.site + '--' + config.org + '.aem.page');
+python3 -c "
+import json
+with open('.claude-plugin/project-config.json') as f: c = json.load(f)
+c['ref'] = '${NEW_BRANCH}'
+with open('.claude-plugin/project-config.json', 'w') as f: json.dump(c, f, indent=2)
 "
 ```
 
